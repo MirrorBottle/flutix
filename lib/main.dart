@@ -1,4 +1,5 @@
 import 'package:flutix/globals.dart';
+import 'package:flutix/pages/auth/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutix/pages/misc/splash_screen.dart';
@@ -41,6 +42,6 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const SplashScreen());
+        home: const SignUpScreen());
   }
 }

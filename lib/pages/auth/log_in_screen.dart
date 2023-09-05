@@ -3,9 +3,6 @@ import 'package:flutix/pages/auth/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:flutter/foundation.dart';
-import 'package:concentric_transition/concentric_transition.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutix/globals.dart';
 
 class LogInScreen extends StatefulWidget {
@@ -106,9 +103,6 @@ class _LogInScreenState extends State<LogInScreen> {
                   ),
                   ButtonComponent(
                     buttontext: 'Log In',
-                    buttonDecoration: constButtonDecoration.copyWith(
-                        color: constPrimaryColor),
-                    // onPressed: _onPressedFunction,
                     onPressed: () async {},
                   ),
                   const SizedBox(height: 10),
@@ -118,12 +112,10 @@ class _LogInScreenState extends State<LogInScreen> {
                             TextStyle(color: constPrimaryColor, fontSize: 16)),
                     onTap: () {
                       Navigator.push(
-                          context,
-                          ConcentricPageRoute(
-                              maintainState: false,
-                              builder: (ctx) {
-                                return const SignUpScreen();
-                              }));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SignUpScreen()),
+                      );
                     },
                   )
 

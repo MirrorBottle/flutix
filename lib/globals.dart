@@ -18,6 +18,7 @@ const kBgColor =  Color(0xFFFAFAFA);
 const kHalfDay = Color(0xFFE8B500);
 const kGreenColor = Color(0xFF08BC85);
 
+
 final kTextStyle = GoogleFonts.robotoSlab(
   color: kTitleColor,
 );
@@ -27,14 +28,14 @@ final constTextStyle = GoogleFonts.robotoSlab(
 );
 
 final constHeadingStyle = GoogleFonts.robotoSlab(
-  color: Colors.black,
-  fontSize: 20,
+  color: constPrimaryColor,
+  fontSize: 28,
   textStyle: const TextStyle(
     fontWeight: FontWeight.bold,
   )
 );
 
-final constSubStyle = GoogleFonts.robotoSlab(
+final constSubStyle = GoogleFonts.raleway(
   color: Colors.grey,
   fontSize: 15,
 );
@@ -48,8 +49,9 @@ final constListTitleStyle = GoogleFonts.robotoSlab(
 );
 
 const constButtonDecoration = BoxDecoration(
+  color: constPrimaryColor,
   borderRadius: BorderRadius.all(
-    Radius.circular(6),
+    Radius.circular(10),
   ),
 );
 

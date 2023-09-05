@@ -1,13 +1,11 @@
 import 'package:flutix/components/button_component.dart';
 import 'package:flutix/pages/auth/log_in_screen.dart';
+import 'package:flutix/pages/auth/sign_up/sign_up_genre_screen.dart';
+import 'package:flutix/pages/auth/sign_up/sign_up_info_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nb_utils/nb_utils.dart';
-import 'package:flutter/foundation.dart';
-import 'package:concentric_transition/concentric_transition.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutix/globals.dart';
-
+import 'package:flutter_svg/flutter_svg.dart';
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
 
@@ -15,10 +13,41 @@ class SignUpScreen extends StatefulWidget {
   _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpScreenState extends State<SignUpScreen> with TickerProviderStateMixin {
+  final _scrollController = ScrollController();
+
+  var _selectedIndex = 3;
+  final _headlines = [
+    ["Light On,", "Sign Up!"],
+    ["Pick Your", "Poisons..."],
+    ["All Set,", "Ready to Go?"]
+  ];
+
   @override
   void initState() {
     super.initState();
+  }
+
+  void _handleContinueButton() {
+    if (_selectedIndex < 3) {
+      setState(() {
+        _selectedIndex = _selectedIndex + 1;
+      });
+    }
+    _scrollController.jumpTo(0);
+  }
+
+  void _handleBackButton() {
+    if (_selectedIndex > 1) {
+      setState(() {
+        _selectedIndex = _selectedIndex - 1;
+      });
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const LogInScreen()),
+      );
+    }
   }
 
   @override
@@ -33,8 +62,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
         titleSpacing: 0.0,
         iconTheme: const IconThemeData(color: Colors.white),
         automaticallyImplyLeading: false,
+        leading: Padding(
+          padding: const EdgeInsets.only(top: 18.0, bottom: 18),
+          child: BackButton(
+            onPressed: () {
+              _handleBackButton();
+            },
+          ),
+        ),
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
+        reverse: true,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -43,12 +82,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Light On,",
+                  Text(_headlines[_selectedIndex - 1][0],
                       style: GoogleFonts.robotoSlab(
                           color: Colors.white, fontSize: 34)),
-                  Text("Sign Up!",
+                  Text(_headlines[_selectedIndex - 1][1],
                       style: GoogleFonts.robotoSlab(
-                          color: Colors.white, fontSize: 34, fontWeight: FontWeight.bold))
+                          color: Colors.white,
+                          fontSize: 34,
+                          fontWeight: FontWeight.bold))
                 ],
               ),
             ),
@@ -64,72 +105,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     topRight: Radius.circular(30.0)),
                 color: Color.fromARGB(255, 250, 250, 250),
               ),
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  SizedBox(
-                    height: 60.0,
-                    child: AppTextField(
-                      textFieldType: TextFieldType.USERNAME,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        hintText: 'Insert Email',
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Username tidak boleh kosong';
-                        }
-                        return null;
+              child: Column(children: [
+                if (_selectedIndex == 1) ...[
+                  SignUpInfoScreen(voidCallback: _handleContinueButton),
+                ] else if (_selectedIndex == 2) ...[
+                  SignUpGenreScreen(voidCallback: _handleContinueButton),
+                ] else ...[
+                  SvgPicture.asset(
+                      'assets/svg/account_create_success.svg',
+                      width: 280,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      "You're all in, Cinephile! 🎉",
+                      style: constHeadingStyle,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      "Your account is good to go",
+                      style: constSubStyle,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 30),
+                    ButtonIconComponent(
+                      buttontext: "Let's Explore!",
+                      onPressed: () {
+
                       },
                     ),
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  AppTextField(
-                    textFieldType: TextFieldType.PASSWORD,
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
-                      hintText: 'Masukkan password',
-                    ),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Password tidak boleh kosong!';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  ButtonComponent(
-                    buttontext: 'Continue',
-                    buttonDecoration: constButtonDecoration.copyWith(
-                        color: constPrimaryColor),
-                    // onPressed: _onPressedFunction,
-                    onPressed: () async {},
-                  ),
-                  const SizedBox(height: 10),
-                  GestureDetector(
-                    child: const Text("Already have an account? Log In!",
-                        style:
-                            TextStyle(color: constPrimaryColor, fontSize: 16)),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          ConcentricPageRoute(
-                              maintainState: false,
-                              builder: (ctx) {
-                                return const LogInScreen();
-                              }));
-                    },
-                  )
-
-                  // ),
                 ],
-              ),
+              ]),
             ),
           ],
         ),
