@@ -38,7 +38,13 @@ dependencies:
   flutter_bloc:
   equatable:
   http:
+  concentric_transition: ^1.0.3
+  nb_utils: ^6.0.3
+  google_fonts: ^5.1.0
+  flashy_tab_bar2: ^0.0.6
+  calendar_timeline: ^1.1.2
 dev_dependencies:
+  flutter_launcher_icons: ^0.13.1
   flutter_test:
     sdk: flutter
 
@@ -49,6 +55,12 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/launcher.png"
+  adaptive_icon_background: "#062c62"
+  adaptive_icon_foreground: "assets/images/icon_foreground.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -63,6 +75,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - img/
+    - assets/images/
+    - assets/svg/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
