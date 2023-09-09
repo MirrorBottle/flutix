@@ -36,7 +36,7 @@ class InTheaterCard extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             SizedBox(
-              width: context.width() - 100,
+              width: 320,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -341,7 +341,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               ])),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -351,10 +351,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   style: constTextStyle.copyWith(
                                       color: Colors.white,
                                       fontWeight: FontWeight.normal,
-                                      fontSize: 23)),
+                                      fontSize: 20)),
                               Text("IDR 280,000",
                                   style: constNumberTextStyle.copyWith(
-                                      color: Colors.white, fontSize: 26))
+                                      color: Colors.white, fontSize: 23))
                             ],
                           ),
                           Row(
@@ -367,16 +367,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   child: Column(
                                     children: [
                                       Container(
-                                          width: 30,
-                                          height: 30,
+                                          width: 25,
+                                          height: 25,
                                           decoration: const BoxDecoration(
                                             borderRadius: BorderRadius.all(
-                                                Radius.circular(13)),
+                                                Radius.circular(10)),
                                             color: Colors.white,
                                           ),
                                           child: const Icon(
                                             Icons.arrow_upward,
-                                            size: 20,
+                                            size: 18,
                                           )),
                                       const SizedBox(height: 10),
                                       Text("Top Up",
@@ -396,15 +396,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   child: Column(
                                     children: [
                                       Container(
-                                          width: 30,
-                                          height: 30,
+                                          width: 25,
+                                          height: 25,
                                           decoration: const BoxDecoration(
                                             borderRadius: BorderRadius.all(
-                                                Radius.circular(13)),
+                                                Radius.circular(10)),
                                             color: Colors.white,
                                           ),
-                                          child: const Icon(Icons.history,
-                                              size: 20)),
+                                          child: const Icon(
+                                            Icons.history,
+                                            size: 18,
+                                          )),
                                       const SizedBox(height: 10),
                                       Text("History",
                                           style: constTextStyle.copyWith(

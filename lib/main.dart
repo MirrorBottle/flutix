@@ -3,9 +3,11 @@ import 'package:flutix/pages/auth/sign_up_screen.dart';
 import 'package:flutix/pages/home/home_screen.dart';
 import 'package:flutix/pages/home/main_screen.dart';
 import 'package:flutix/pages/misc/onboarding_screen.dart';
+import 'package:flutix/pages/movie/movie_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutix/pages/misc/splash_screen.dart';
+import 'package:flutix/pages/movie/movie_detail_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -45,6 +47,6 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const MainScreen());
+        home: const MovieDetailScreen());
   }
 }

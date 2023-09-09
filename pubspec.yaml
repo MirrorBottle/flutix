@@ -46,7 +46,6 @@ dependencies:
   animations: ^2.0.8
   flutter_svg: ^1.0.2
   book_my_seat: ^1.0.1
-  youtube_player_flutter: ^8.1.2
   flutter_swiper_plus: ^2.0.4
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1

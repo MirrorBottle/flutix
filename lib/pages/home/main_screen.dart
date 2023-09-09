@@ -38,20 +38,21 @@ class _MainScreenState extends State<MainScreen> {
         items: [
           FlashyTabBarItem(
             icon: const Icon(Icons.dashboard, size: 30),
-            title: const Text('Home', style: TextStyle(color: Colors.white)),
+            title: const Text('Home',
+                style: TextStyle(color: Colors.white, fontSize: 18)),
             activeColor: Colors.white,
           ),
           FlashyTabBarItem(
-              icon: const Icon(Icons.movie, size: 30),
-              title: const Text('Movie'),
-              activeColor: constPrimaryColor),
-          FlashyTabBarItem(
             icon: const Icon(Icons.confirmation_num, size: 30),
-            title: const Text('Ticket'),
+            title: const Text('Ticket',
+                style: TextStyle(color: Colors.white, fontSize: 18)),
+            activeColor: Colors.white,
           ),
           FlashyTabBarItem(
             icon: const Icon(Icons.account_circle, size: 30),
-            title: const Text('My Profile'),
+            title: const Text('Profile',
+                style: TextStyle(color: Colors.white, fontSize: 18)),
+            activeColor: Colors.white,
           ),
         ],
       ),
