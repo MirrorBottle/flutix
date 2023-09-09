@@ -1,5 +1,8 @@
 import 'package:flutix/globals.dart';
 import 'package:flutix/pages/auth/sign_up_screen.dart';
+import 'package:flutix/pages/home/home_screen.dart';
+import 'package:flutix/pages/home/main_screen.dart';
+import 'package:flutix/pages/misc/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutix/pages/misc/splash_screen.dart';
@@ -15,7 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Flutix',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           appBarTheme: const AppBarTheme(
@@ -42,6 +45,6 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const SignUpScreen());
+        home: const MainScreen());
   }
 }

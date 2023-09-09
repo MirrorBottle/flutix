@@ -44,7 +44,10 @@ dependencies:
   flashy_tab_bar2: ^0.0.6
   calendar_timeline: ^1.1.2
   animations: ^2.0.8
-  flutter_svg: ^2.0.7
+  flutter_svg: ^1.0.2
+  book_my_seat: ^1.0.1
+  youtube_player_flutter: ^8.1.2
+  flutter_swiper_plus: ^2.0.4
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_test:

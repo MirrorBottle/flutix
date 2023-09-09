@@ -1,5 +1,7 @@
 import 'package:flutix/components/button_component.dart';
 import 'package:flutix/pages/auth/sign_up_screen.dart';
+import 'package:flutix/pages/home/home_screen.dart';
+import 'package:flutix/pages/home/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -103,7 +105,13 @@ class _LogInScreenState extends State<LogInScreen> {
                   ),
                   ButtonComponent(
                     buttontext: 'Log In',
-                    onPressed: () async {},
+                    onPressed: () async {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MainScreen()),
+                      );
+                    },
                   ),
                   const SizedBox(height: 10),
                   GestureDetector(

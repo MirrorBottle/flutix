@@ -45,7 +45,7 @@ class SelectCard extends StatelessWidget {
                   Text(data["name"]!,
                       style: GoogleFonts.raleway(
                           fontWeight: FontWeight.bold,
-                          fontSize: 24,
+                          fontSize: 22,
                           color: Colors.white))
                 ],
               )),

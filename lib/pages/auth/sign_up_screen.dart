@@ -2,10 +2,13 @@ import 'package:flutix/components/button_component.dart';
 import 'package:flutix/pages/auth/log_in_screen.dart';
 import 'package:flutix/pages/auth/sign_up/sign_up_genre_screen.dart';
 import 'package:flutix/pages/auth/sign_up/sign_up_info_screen.dart';
+import 'package:flutix/pages/home/home_screen.dart';
+import 'package:flutix/pages/home/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutix/globals.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
 
@@ -13,10 +16,11 @@ class SignUpScreen extends StatefulWidget {
   _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> with TickerProviderStateMixin {
+class _SignUpScreenState extends State<SignUpScreen>
+    with TickerProviderStateMixin {
   final _scrollController = ScrollController();
 
-  var _selectedIndex = 3;
+  var _selectedIndex = 1;
   final _headlines = [
     ["Light On,", "Sign Up!"],
     ["Pick Your", "Poisons..."],
@@ -34,7 +38,8 @@ class _SignUpScreenState extends State<SignUpScreen> with TickerProviderStateMix
         _selectedIndex = _selectedIndex + 1;
       });
     }
-    _scrollController.jumpTo(0);
+    _scrollController.animateTo(0,
+        duration: const Duration(seconds: 1), curve: Curves.linear);
   }
 
   void _handleBackButton() {
@@ -112,28 +117,32 @@ class _SignUpScreenState extends State<SignUpScreen> with TickerProviderStateMix
                   SignUpGenreScreen(voidCallback: _handleContinueButton),
                 ] else ...[
                   SvgPicture.asset(
-                      'assets/svg/account_create_success.svg',
-                      width: 280,
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      "You're all in, Cinephile! 🎉",
-                      style: constHeadingStyle,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "Your account is good to go",
-                      style: constSubStyle,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 30),
-                    ButtonIconComponent(
-                      buttontext: "Let's Explore!",
-                      onPressed: () {
-
-                      },
-                    ),
+                    'assets/svg/account_create_success.svg',
+                    width: 280,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    "You're set, Cinephile! 🎉",
+                    style: constHeadingStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Your account is good to go",
+                    style: constSubStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 30),
+                  ButtonIconComponent(
+                    buttontext: "Let's Explore!",
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MainScreen()),
+                      );
+                    },
+                  ),
                 ],
               ]),
             ),

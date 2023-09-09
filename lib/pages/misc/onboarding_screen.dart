@@ -39,30 +39,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: ConcentricPageView(
-        colors: pages.map((p) => p.bgColor).toList(),
-        radius: screenWidth * 0.1,
-        // curve: Curves.ease,
-        itemCount: pages.length,
-        nextButtonBuilder: (context) => Padding(
-          padding: const EdgeInsets.only(left: 3), // visual center
-          child: Icon(
-            Icons.navigate_next,
-            size: screenWidth * 0.08,
-          ),
-        ),
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (index) {
-          final page = pages[index % pages.length];
-          return SafeArea(
-            child: _Page(page: page),
-          );
-        },
-        onFinish: () => {
-          Navigator.push(context, ConcentricPageRoute(maintainState: false, builder: (ctx) {
-            return const LogInScreen();
-          }))
-        }
-      ),
+          colors: pages.map((p) => p.bgColor).toList(),
+          radius: screenWidth * 0.1,
+          // curve: Curves.ease,
+          itemCount: pages.length,
+          nextButtonBuilder: (context) => Padding(
+                padding: const EdgeInsets.only(left: 3), // visual center
+                child: Icon(
+                  Icons.navigate_next,
+                  size: screenWidth * 0.08,
+                ),
+              ),
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (index) {
+            final page = pages[index % pages.length];
+            return SafeArea(
+              child: _Page(page: page),
+            );
+          },
+          onFinish: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LogInScreen()),
+                )
+              }),
     );
   }
 }

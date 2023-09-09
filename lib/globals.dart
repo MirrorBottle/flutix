@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 const constPrimaryColor = Color(0xFF002c6a);
 const constSecondaryColor = Color(0xFF00419d);
+const constTernaryColor = Color(0xFFF5c76b);
 const constDangerColor = Color(0xFFC03221);
 const constSuccessColor = Color(0xFF3F826D);
 const constWarningColor = Color(0xFFFFF07C);
@@ -23,6 +24,8 @@ final kTextStyle = GoogleFonts.robotoSlab(
   color: kTitleColor,
 );
 
+final constSecondaryTextStyle = GoogleFonts.raleway();
+final constNumberTextStyle = GoogleFonts.oswald();
 final constTextStyle = GoogleFonts.robotoSlab(
   color: constPrimaryColor
 );
