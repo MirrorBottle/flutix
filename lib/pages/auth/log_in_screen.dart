@@ -43,10 +43,10 @@ class _LogInScreenState extends State<LogInScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text("Welcome Back,",
-                      style: GoogleFonts.robotoSlab(
+                      style: constTextStyle.copyWith(
                           color: Colors.white, fontSize: 34)),
                   Text("Cinephiles",
-                      style: GoogleFonts.robotoSlab(
+                      style: constHeadingStyle.copyWith(
                           color: Colors.white, fontSize: 34, fontWeight: FontWeight.bold))
                 ],
               ),

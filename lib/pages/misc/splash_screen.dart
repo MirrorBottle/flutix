@@ -1,3 +1,4 @@
+import 'package:flutix/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutix/pages/misc/onboarding_screen.dart';
@@ -78,7 +79,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: Text(
                     'Version 1.0.0',
-                    style: GoogleFonts.robotoSlab(
+                    style: constHeadingStyle.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 15.0),

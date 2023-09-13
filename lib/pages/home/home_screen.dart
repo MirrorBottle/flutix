@@ -202,6 +202,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       backgroundColor: constPrimaryColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
         elevation: 0,
         titleSpacing: 5,
         title: const Image(
@@ -363,7 +364,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               GestureDetector(
                                 child: Padding(
                                   padding:
-                                      const EdgeInsets.only(top: 8, right: 15),
+                                      const EdgeInsets.only(top: 8, right: 10, left: 5),
                                   child: Column(
                                     children: [
                                       Container(
@@ -392,7 +393,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               GestureDetector(
                                 child: Padding(
                                   padding:
-                                      const EdgeInsets.only(top: 8, left: 15),
+                                      const EdgeInsets.only(top: 8, left: 10),
                                   child: Column(
                                     children: [
                                       Container(

@@ -32,14 +32,14 @@ class CastCard extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  width: 140,
-                  height: 170,
+                  width: 100,
+                  height: 130,
                 ),
               ),
             ),
             const SizedBox(height: 10),
             SizedBox(
-              width: 140,
+              width: 100,
               child: Text(data["name"]!,
                   overflow: TextOverflow.fade,
                   maxLines: 1,
@@ -48,7 +48,7 @@ class CastCard extends StatelessWidget {
                       color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
             ),
             SizedBox(
-              width: 140,
+              width: 100,
               child: Text(data["character"]!,
                   overflow: TextOverflow.fade,
                   maxLines: 1,
@@ -262,7 +262,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                         children: [
                           ...["Mystery", "Comedy", "Romance", "Drama", "Young Adult"].map((genre) => Container(
                             padding: const EdgeInsets.all(8),
-                            margin: const EdgeInsets.only(right: 10, top: 5),
+                            margin: const EdgeInsets.only(right: 5, top: 5),
                             decoration: const BoxDecoration(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5)),

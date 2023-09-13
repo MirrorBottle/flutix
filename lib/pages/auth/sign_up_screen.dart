@@ -88,10 +88,10 @@ class _SignUpScreenState extends State<SignUpScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(_headlines[_selectedIndex - 1][0],
-                      style: GoogleFonts.robotoSlab(
+                      style: constTextStyle.copyWith(
                           color: Colors.white, fontSize: 34)),
                   Text(_headlines[_selectedIndex - 1][1],
-                      style: GoogleFonts.robotoSlab(
+                      style: constHeadingStyle.copyWith(
                           color: Colors.white,
                           fontSize: 34,
                           fontWeight: FontWeight.bold))

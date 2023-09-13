@@ -1,4 +1,5 @@
 import 'package:concentric_transition/concentric_transition.dart';
+import 'package:flutix/globals.dart';
 import 'package:flutix/pages/auth/log_in_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
@@ -126,7 +127,7 @@ class _Text extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       page.title ?? '',
-      style: GoogleFonts.robotoSlab(
+      style: constHeadingStyle.copyWith(
         color: page.textColor,
         fontWeight: FontWeight.w600,
         letterSpacing: 0.0,

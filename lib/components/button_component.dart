@@ -39,14 +39,16 @@ class ButtonComponent extends StatelessWidget {
 
 class ButtonIconComponent extends StatelessWidget {
   final String buttontext;
-  final Decoration buttonDecoration;
+  final BoxDecoration buttonDecoration;
   final IconData icon;
+  final bool invert;
   var onPressed;
 
   // ignore: use_key_in_widget_constructors
   ButtonIconComponent(
       {required this.buttontext,
       this.buttonDecoration = constButtonDecoration,
+      this.invert = false,
       this.icon = Icons.arrow_circle_right_rounded,
       required this.onPressed});
 
@@ -59,7 +61,9 @@ class ButtonIconComponent extends StatelessWidget {
         height: 70,
         padding:
             const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 30, right: 30),
-        decoration: buttonDecoration,
+        decoration: buttonDecoration.copyWith(
+          color: invert ? Colors.white : constPrimaryColor
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -67,10 +71,10 @@ class ButtonIconComponent extends StatelessWidget {
               buttontext,
               style: kTextStyle.copyWith(
                   fontSize: 21.0,
-                  color: Colors.white,
+                  color: invert ? constPrimaryColor : Colors.white,
                   fontWeight: FontWeight.bold),
             ),
-            Icon(icon, color: Colors.white, size: 35)
+            Icon(icon, color: invert ? constPrimaryColor : Colors.white, size: 35)
           ],
         ),
       ),

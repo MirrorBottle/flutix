@@ -4,6 +4,7 @@ import 'package:flutix/pages/home/home_screen.dart';
 import 'package:flutix/pages/home/main_screen.dart';
 import 'package:flutix/pages/misc/onboarding_screen.dart';
 import 'package:flutix/pages/movie/movie_detail_screen.dart';
+import 'package:flutix/pages/order/order_date.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutix/pages/misc/splash_screen.dart';
@@ -47,6 +48,6 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const MovieDetailScreen());
+        home: const OrderDateScreen());
   }
 }
