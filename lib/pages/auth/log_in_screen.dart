@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:flutix/globals.dart';
+import 'package:flutix/services/auth_service.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({Key? key}) : super(key: key);
@@ -47,7 +48,9 @@ class _LogInScreenState extends State<LogInScreen> {
                           color: Colors.white, fontSize: 34)),
                   Text("Cinephiles",
                       style: constHeadingStyle.copyWith(
-                          color: Colors.white, fontSize: 34, fontWeight: FontWeight.bold))
+                          color: Colors.white,
+                          fontSize: 34,
+                          fontWeight: FontWeight.bold))
                 ],
               ),
             ),
@@ -106,11 +109,12 @@ class _LogInScreenState extends State<LogInScreen> {
                   ButtonComponent(
                     buttontext: 'Log In',
                     onPressed: () async {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const MainScreen()),
-                      );
+                      await AuthService.signUp(
+                          "setiawanbayu66152@gmail.com",
+                          "123123",
+                          "bayu",
+                          ["Drama", "Romance", "Isekai"],
+                          "Japanese");
                     },
                   ),
                   const SizedBox(height: 10),

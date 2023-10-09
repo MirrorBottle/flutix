@@ -23,8 +23,6 @@ class _OrderDateScreenState extends State<OrderDateScreen>
   }
 
   @override
-
-  var rng = new Random();
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,

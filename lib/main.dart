@@ -1,4 +1,6 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutix/globals.dart';
+import 'package:flutix/pages/auth/log_in_screen.dart';
 import 'package:flutix/pages/auth/sign_up_screen.dart';
 import 'package:flutix/pages/home/home_screen.dart';
 import 'package:flutix/pages/home/main_screen.dart';
@@ -10,7 +12,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutix/pages/misc/splash_screen.dart';
 import 'package:flutix/pages/movie/movie_detail_screen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -48,6 +52,6 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const OrderDateScreen());
+        home: const LogInScreen());
   }
 }

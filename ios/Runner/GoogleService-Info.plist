@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyCc1Q7AfxF7h-l_Y-bEVE12s1B-n9UCM9Q</string>
+	<key>GCM_SENDER_ID</key>
+	<string>33812622240</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.flutterCubit</string>
+	<key>PROJECT_ID</key>
+	<string>mirrorbottle-flutix</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mirrorbottle-flutix.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:33812622240:ios:1e13b366fb618a7f9bd2c5</string>
+</dict>
+</plist>

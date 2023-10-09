@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "33812622240",
+    "project_id": "mirrorbottle-flutix",
+    "storage_bucket": "mirrorbottle-flutix.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:33812622240:android:8cba9ef5a96da8a19bd2c5",
+        "android_client_info": {
+          "package_name": "com.example.flutix"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjMqW7jQ10R4o5GAXCYQNGCwr2-hLOYmM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:33812622240:android:45125bcca5eacc789bd2c5",
+        "android_client_info": {
+          "package_name": "com.mirrorbottle.flutix"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjMqW7jQ10R4o5GAXCYQNGCwr2-hLOYmM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
