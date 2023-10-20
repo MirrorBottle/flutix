@@ -32,7 +32,7 @@ final constTextStyle = GoogleFonts.robotoSlab(
 
 final constHeadingStyle = GoogleFonts.robotoSlab(
   color: constPrimaryColor,
-  fontSize: 28,
+  fontSize: 24,
   textStyle: const TextStyle(
     fontWeight: FontWeight.bold,
   )

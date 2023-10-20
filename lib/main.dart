@@ -4,6 +4,7 @@ import 'package:flutix/pages/auth/log_in_screen.dart';
 import 'package:flutix/pages/home/main_screen.dart';
 import 'package:flutix/pages/order/order_date.dart';
 import 'package:flutix/pages/profile/profile_screen.dart';
+import 'package:flutix/pages/wallet/wallet_screen.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
@@ -47,6 +48,6 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const MainScreen());
+        home: const WalletScreen());
   }
 }
