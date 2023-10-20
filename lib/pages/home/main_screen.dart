@@ -1,6 +1,7 @@
 import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutix/globals.dart';
 import 'package:flutix/pages/home/home_screen.dart';
+import 'package:flutix/pages/ticket/ticket_list_screen.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -14,7 +15,7 @@ class _MainScreenState extends State<MainScreen> {
 
   List<Widget> tabItems = [
     const HomeScreen(),
-    const Center(child: Text("1")),
+    const TicketListScreen(),
     const Center(child: Text("2")),
     const Center(child: Text("3")),
   ];

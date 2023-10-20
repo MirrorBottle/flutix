@@ -1,3 +1,4 @@
+import 'package:flutix/components/image_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_plus/flutter_swiper_plus.dart';
 import 'package:flutix/globals.dart';
@@ -15,25 +16,7 @@ class InTheaterCard extends StatelessWidget {
           padding: const EdgeInsets.only(right: 10, top: 10),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Material(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
-              clipBehavior: Clip.antiAlias,
-              color: constPrimaryColor,
-              child: GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                child: Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(data["image"]!),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  width: 320,
-                  height: 170,
-                ),
-              ),
-            ),
+            ImageComponent(url: data["image"]!, height: 170, width: 320),
             const SizedBox(height: 10),
             SizedBox(
               width: 320,
@@ -76,25 +59,7 @@ class ComingSoonCard extends StatelessWidget {
           padding: const EdgeInsets.only(right: 10, top: 10),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Material(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
-              clipBehavior: Clip.antiAlias,
-              color: constPrimaryColor,
-              child: GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                child: Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(data["image"]!),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  width: 140,
-                  height: 170,
-                ),
-              ),
-            ),
+            ImageComponent(url: data["image"]!, height: 170, width: 140),
             const SizedBox(height: 10),
             SizedBox(
               width: 140,
@@ -363,8 +328,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             children: [
                               GestureDetector(
                                 child: Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 8, right: 10, left: 5),
+                                  padding: const EdgeInsets.only(
+                                      top: 8, right: 10, left: 5),
                                   child: Column(
                                     children: [
                                       Container(
