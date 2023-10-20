@@ -7,6 +7,9 @@ import 'package:flutix/pages/home/main_screen.dart';
 import 'package:flutix/pages/misc/onboarding_screen.dart';
 import 'package:flutix/pages/movie/movie_detail_screen.dart';
 import 'package:flutix/pages/order/order_date.dart';
+import 'package:flutix/pages/wallet/wallet_topup_screen.dart';
+import 'package:flutix/pages/wallet/wallet_topup_success_screen.dart';
+import 'package:flutix/pages/ticket/ticket_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutix/pages/misc/splash_screen.dart';
@@ -52,6 +55,6 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const LogInScreen());
+        home: const TicketDetailScreen());
   }
 }
