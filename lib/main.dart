@@ -7,12 +7,14 @@ import 'package:flutix/pages/home/main_screen.dart';
 import 'package:flutix/pages/misc/onboarding_screen.dart';
 import 'package:flutix/pages/movie/movie_detail_screen.dart';
 import 'package:flutix/pages/order/order_date.dart';
+import 'package:flutix/pages/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutix/pages/misc/splash_screen.dart';
 import 'package:flutix/pages/movie/movie_detail_screen.dart';
 
 Future<void> main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());
@@ -52,6 +54,6 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const LogInScreen());
+        home: const MainScreen());
   }
 }
