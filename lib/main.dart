@@ -3,9 +3,11 @@ import 'package:flutix/globals.dart';
 import 'package:flutix/pages/auth/log_in_screen.dart';
 import 'package:flutix/pages/home/main_screen.dart';
 import 'package:flutix/pages/order/order_date.dart';
+import 'package:flutix/pages/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());
