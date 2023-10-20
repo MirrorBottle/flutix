@@ -52,6 +52,6 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const WalletTopup());
+        home: const MainScreen());
   }
 }
