@@ -22,7 +22,7 @@ class _WalletTopupSuccessState extends State<WalletTopupSuccess>
 
   var _selectedIndex = 1;
   final _headlines = [
-    ["Light On,", "Sign Up!"],
+    ["Ka-Ching!", "Your're Loaded!"],
     ["Pick Your", "Poisons..."],
     ["All Set,", "Ready to Go?"]
   ];
@@ -113,12 +113,12 @@ class _WalletTopupSuccessState extends State<WalletTopupSuccess>
               child: Column(
                 children: [
                   SvgPicture.asset(
-                    'assets/svg/wallet_topup_success_screen.svg',
+                    'assets/svg/Ninja.svg',
                     width: 280,
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    "Happy Waching!",
+                    "Your Wallet Ninja-fied!",
                     style: constTextStyle.copyWith(
                         color: Colors.white,
                         fontSize: 26,
@@ -127,7 +127,7 @@ class _WalletTopupSuccessState extends State<WalletTopupSuccess>
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "You have successfully \n bought the ticket",
+                    "Ready to Slice Through Ticket Prices \n and Conquer teh Movies? ",
                     style: constSubStyle,
                     textAlign: TextAlign.center,
                   ),

@@ -7,6 +7,8 @@ import 'package:flutix/pages/wallet/wallet_topup_screen.dart';
 import 'package:flutix/pages/wallet/wallet_topup_success_screen.dart';
 import 'package:flutix/pages/ticket/ticket_detail_screen.dart';
 import 'package:flutix/pages/profile/profile_screen.dart';
+import 'package:flutix/pages/order/order_confirm.dart';
+import 'package:flutix/pages/order/order_success.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
@@ -50,6 +52,6 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const MainScreen());
+        home: const WalletTopup());
   }
 }

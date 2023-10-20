@@ -5,8 +5,9 @@ const constPrimaryColor = Color(0xFF002c6a);
 const constSecondaryColor = Color(0xFF00419d);
 const constTernaryColor = Color(0xFFF5c76b);
 const constDangerColor = Color(0xFFC03221);
-const constSuccessColor = Color(0xFF3F826D);
+const constSuccessColor = Color(0xFFD1E7C6);
 const constWarningColor = Color(0xFFFFF07C);
+
 
 
 const kMainColor = Color(0xff2dba4e);
