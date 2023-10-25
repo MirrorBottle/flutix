@@ -26,6 +26,7 @@ final kTextStyle = GoogleFonts.robotoSlab(
 
 final constSecondaryTextStyle = GoogleFonts.raleway();
 final constNumberTextStyle = GoogleFonts.oswald();
+final constLabelNumberTextStyle = GoogleFonts.openSans();
 final constTextStyle = GoogleFonts.robotoSlab(
   color: constPrimaryColor
 );
