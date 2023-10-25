@@ -8,24 +8,26 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutix/globals.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:nb_utils/nb_utils.dart';
 
-class OrderSuccess extends StatefulWidget {
-  const OrderSuccess({Key? key}) : super(key: key);
+class WalletTopup extends StatefulWidget {
+  const WalletTopup({Key? key}) : super(key: key);
 
   @override
-  _OrderSuccessState createState() => _OrderSuccessState();
+  _WalletTopupState createState() => _WalletTopupState();
 }
 
-class _OrderSuccessState extends State<OrderSuccess>
+class _WalletTopupState extends State<WalletTopup>
     with TickerProviderStateMixin {
   final _scrollController = ScrollController();
 
   var _selectedIndex = 1;
   final _headlines = [
-    ["Light On,", "Sign Up!"],
+    ["Ready to,", "Load Up?"],
     ["Pick Your", "Poisons..."],
     ["All Set,", "Ready to Go?"]
   ];
+  int selectedKotakIndex = -1;
 
   @override
   void initState() {
@@ -54,6 +56,15 @@ class _OrderSuccessState extends State<OrderSuccess>
       );
     }
   }
+
+  List<String> kotakValues = [
+    "IDR 50.000",
+    "IDR 100.000",
+    "IDR 150.000",
+    "IDR 200.000",
+    "IDR 500.000",
+    "IDR 1.000.000",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -111,29 +122,81 @@ class _OrderSuccessState extends State<OrderSuccess>
                 color: constPrimaryColor,
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SvgPicture.asset(
-                    'assets/svg/wallet_topup_success_screen.svg',
-                    width: 280,
-                  ),
                   const SizedBox(height: 12),
-                  Text(
-                    "Happy Waching!",
-                    style: constTextStyle.copyWith(
-                        color: Colors.white,
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
+                  Text("Type Amount",
+                      style: constHeadingStyle.copyWith(
+                          color: Colors.white, fontSize: 22)),
+                  const SizedBox(height: 15),
+                  SizedBox(
+                    height: 60.0,
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        fillColor: Colors.white,
+                        labelText: 'Rp. 0',
+                        hintText: 'Insert Amount',
+                      ),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'tidak boleh kosong';
+                        }
+                        return null;
+                      },
+                    ),
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    "You have successfully \n bought the ticket",
-                    style: constSubStyle,
-                    textAlign: TextAlign.center,
+                  const SizedBox(height: 35),
+                  Text("Or, Choose Below",
+                      style: constHeadingStyle.copyWith(
+                          color: Colors.white, fontSize: 22)),
+                  const SizedBox(height: 15),
+
+                  GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, // Sekarang ada 2 kolom dalam grid
+                    ),
+                    shrinkWrap:
+                        true, // Membungkus GridView dalam SingleChildScrollView
+                    physics:
+                        NeverScrollableScrollPhysics(), // Untuk mencegah scroll GridView
+                    itemCount: kotakValues.length, // Jumlah kotak dalam grid
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedKotakIndex =
+                                index; // Menyimpan indeks kotak yang dipilih
+                          });
+                        },
+                        child: Container(
+                          margin: EdgeInsets.all(8),
+                          width: 50, // Mengatur lebar kotak
+                          height: 50, // Mengatur tinggi kotak
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                                12.0), // Menambahkan lengkungan pada sisi kotak
+                            color: selectedKotakIndex == index
+                                ? Colors.white
+                                : Color(0xFF00419d) // Warna kotak tergantung pada pemilihan
+                          ),
+                          child: Center(
+                            child: Text(
+                              kotakValues[index], // Mengambil nilai dari list
+                              style: constNumberTextStyle.copyWith(
+                                color: selectedKotakIndex == index
+                                ? Color(0xFF00419d)
+                                : Color(0xFFF5c76b),
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold)
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(height: 30),
                   ButtonIconComponent(
-                    buttontext: "My Tickets",
+                    buttontext: "Continue",
                     invert: true,
                     onPressed: () {
                       Navigator.push(
@@ -143,22 +206,6 @@ class _OrderSuccessState extends State<OrderSuccess>
                       );
                     },
                   ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const MainScreen()),
-                      );
-                    },
-                    child: Text(
-                      "Back To Home",
-                      style: constSecondaryTextStyle.copyWith(
-                        color: Colors.white,
-                        fontSize: 14,
-                      ),
-                    ), // Teks yang akan ditampilkan di dalam tombol
-                  )
                 ],
               ),
             ),
