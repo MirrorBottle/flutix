@@ -1,4 +1,6 @@
 import 'package:flutix/globals.dart';
+import 'package:flutix/pages/auth/log_in_screen.dart';
+import 'package:flutix/pages/home/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutix/pages/misc/onboarding_screen.dart';
@@ -29,18 +31,26 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void goTo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isLogin', false);
     bool isFirst = prefs.getBool('isFirst') ?? true;
+    bool isLogin = prefs.getBool('isLogin') ?? false;
     if (isFirst) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const OnboardingScreen()),
       );
     } else {
-      // if (isLogin) {
-      //   const MainScreen().launch(context);
-      // } else {
-      //   const SignIn().launch(context);
-      // }
+      if (isLogin) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+        );
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const LogInScreen()),
+        );
+      }
     }
   }
 

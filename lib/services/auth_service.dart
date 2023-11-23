@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutix/models/user.dart';
 import 'package:flutix/extensions/firebase_user_extension.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutix/services/user_service.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 class AuthService {
   // ignore: prefer_final_fields
@@ -10,26 +12,32 @@ class AuthService {
 
   static get user => null;
 
-  static Future<void> signUp(String email, String password, String name,
-      List<String> selectedGenres, String selectedLanguage) async {
+  static Future<void> signUp(UserModel data) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+          email: data.email, password: data.password!);
       UserModel user = result.user!.convertToUser(
-          name: name,
-          selectedGenres: selectedGenres,
-          selectedLanguage: selectedLanguage);
-
+          name: data.name,
+          selectedGenres: data.selectedGenres,
+          selectedLanguage: data.selectedLanguage);
+      String _authData = json.encode(user.toMap());
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('auth', _authData);
       await UserService.updateUser(user);
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   static Future<void> signIn(String email, String password) async {
     try {
-      UserCredential result = (await _auth.signInWithEmailAndPassword(
-          email: email, password: password));
-    } catch (e) {}
+      UserCredential result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      UserModel user = await UserService.getUser(result.user!.uid);
+      String _authData = json.encode(user.toMap());
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('auth', _authData);
+    } catch (e) {
+      print(e);
+    }
   }
 }
 

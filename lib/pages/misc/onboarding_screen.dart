@@ -3,6 +3,7 @@ import 'package:flutix/globals.dart';
 import 'package:flutix/pages/auth/log_in_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 final pages = [
   const PageData(
@@ -35,6 +36,15 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
+
+  void _handleFinish() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isFirst', false);
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const LogInScreen()),
+      );
+  }
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -58,12 +68,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: _Page(page: page),
             );
           },
-          onFinish: () => {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LogInScreen()),
-                )
-              }),
+          onFinish: _handleFinish),
     );
   }
 }

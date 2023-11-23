@@ -45,11 +45,16 @@ dependencies:
   flutter_svg: ^1.0.2
   book_my_seat: ^1.0.1
   flutter_swiper_plus: ^2.0.4
-  firebase_core: ^2.16.0
+  firebase_core: ^2.16.0 
   firebase_auth: ^4.10.1
   cloud_firestore: ^4.9.3
   elegant_notification: ^1.11.2
-  get: ^4.6.5
+  provider: ^6.0.5
+  top_snackbar_flutter: ^3.1.0
+  loading_animation_widget: ^1.2.0+4
+  flutter_easyloading: ^3.0.5
+  firebase_storage: ^11.4.1
+  image_picker: ^1.0.4
 dev_dependencies:
   change_app_package_name: ^1.1.0
   flutter_launcher_icons: ^0.13.1

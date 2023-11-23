@@ -9,7 +9,13 @@ extension FirebaseUserExtension on User {
           List<String> selectedGenres = const [],
           String selectedLanguage = "English",
           int balance = 50000}) =>
-      UserModel(uid, email, name, selectedGenres, selectedLanguage, balance);
+      UserModel(
+          id: uid,
+          email: email,
+          name: name,
+          selectedGenres: selectedGenres,
+          balance: balance,
+          selectedLanguage: selectedLanguage);
 
   Future<UserModel> fromFireStore() async =>
       await UserService.getUser(this.uid);

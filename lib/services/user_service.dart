@@ -14,15 +14,14 @@ class UserService {
       'name': user.name,
       'balance': user.balance,
       'selectedGenres': user.selectedGenres,
-      'selectedLanguages': user.selectedLanguage,
-      'profilePicture': user.profilePicture ?? ""
+      'selectedLanguage': user.selectedLanguage,
     });
   }
 
   static Future<UserModel> getUser(String id) async {
     DocumentSnapshot snapshot = await _userCollection.doc(id).get();
 
-    return UserModel(id, snapshot['email'], snapshot['name'], snapshot['balance'],
-        snapshot['selectedGenres'], snapshot['selectedLanguages']);
+    return UserModel(id: id, email: snapshot['email'], name: snapshot['name'], balance: snapshot['balance'],
+        selectedGenres: snapshot['selectedGenres'], selectedLanguage: snapshot['selectedLanguage']);
   }
 }

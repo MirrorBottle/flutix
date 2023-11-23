@@ -83,6 +83,41 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  late AnimationController _ColorAnimationController;
+  late AnimationController _TextAnimationController;
+  late Animation _colorTween, _iconColorTween;
+  late Animation<Offset> _transTween;
+
+  @override
+  void initState() {
+    _ColorAnimationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 0));
+    _colorTween = ColorTween(begin: Colors.transparent, end: Color(0xFFee4c4f))
+        .animate(_ColorAnimationController);
+    _iconColorTween = ColorTween(begin: Colors.grey, end: Colors.white)
+        .animate(_ColorAnimationController);
+
+
+    _TextAnimationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 0));
+
+    _transTween = Tween(begin: Offset(-10, 40), end: Offset(-10, 0))
+        .animate(_TextAnimationController);
+
+    super.initState();
+  }
+
+  bool _scrollListener(ScrollNotification scrollInfo) {
+    if (scrollInfo.metrics.axis == Axis.vertical) {
+      _ColorAnimationController.animateTo(scrollInfo.metrics.pixels / 350);
+
+      _TextAnimationController.animateTo(
+          (scrollInfo.metrics.pixels - 350) / 50);
+      return true;
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     const categories = [
