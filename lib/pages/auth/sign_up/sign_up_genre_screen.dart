@@ -80,12 +80,12 @@ class SignUpGenreScreen extends StatefulWidget {
 class _SignUpGenreScreenState extends State<SignUpGenreScreen> {
   final List<List<Map<String, String>>> _languages = [
     [
-      {"name": "Bahasa", "image": "https://flagcdn.com/w320/id.png"},
-      {"name": "English", "image": "https://flagcdn.com/w320/us.png"},
+      {"name": "ID", "image": "https://flagcdn.com/w320/id.png"},
+      {"name": "US", "image": "https://flagcdn.com/w320/us.png"},
     ],
     [
-      {"name": "Japanese", "image": "https://flagcdn.com/w320/jp.png"},
-      {"name": "Korean", "image": "https://flagcdn.com/w320/kr.png"}
+      {"name": "JP", "image": "https://flagcdn.com/w320/jp.png"},
+      {"name": "KR", "image": "https://flagcdn.com/w320/kr.png"}
     ]
   ];
   final List<List<Map<String, String>>> _genres = [

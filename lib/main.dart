@@ -16,6 +16,7 @@ import 'package:flutix/pages/order/order_confirm.dart';
 import 'package:flutix/pages/order/order_success.dart';
 import 'package:flutix/providers/sign_up_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
@@ -63,6 +64,7 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
+          builder: EasyLoading.init(),
           home: const SplashScreen()),
     );
   }

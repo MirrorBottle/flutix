@@ -1,11 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutix/components/image_component.dart';
+import 'package:flutix/models/movie.dart';
+import 'package:flutix/models/user.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_swiper_plus/flutter_swiper_plus.dart';
 import 'package:flutix/globals.dart';
+import 'package:http/http.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:dio/dio.dart';
 
 class InTheaterCard extends StatelessWidget {
-  final Map<String, String> data;
+  final MovieList data;
   const InTheaterCard({Key? key, required this.data}) : super(key: key);
 
   @override
@@ -16,16 +23,22 @@ class InTheaterCard extends StatelessWidget {
           padding: const EdgeInsets.only(right: 10, top: 10),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            ImageComponent(url: data["image"]!, height: 170, width: 320),
+            ImageComponent(url: data.backdropPath, height: 170, width: 320),
             const SizedBox(height: 10),
             SizedBox(
               width: 320,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(data["title"]!,
-                      style: constSecondaryTextStyle.copyWith(
-                          color: Colors.white, fontSize: 20)),
+                  SizedBox(
+                    width: 180,
+                    child: Text(data.title,
+                        overflow: TextOverflow.fade,
+                        maxLines: 1,
+                        softWrap: false,
+                        style: constSecondaryTextStyle.copyWith(
+                            color: Colors.white, fontSize: 20)),
+                  ),
                   Container(
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -48,7 +61,7 @@ class InTheaterCard extends StatelessWidget {
 }
 
 class ComingSoonCard extends StatelessWidget {
-  final Map<String, String> data;
+  final MovieList data;
   const ComingSoonCard({Key? key, required this.data}) : super(key: key);
 
   @override
@@ -59,11 +72,11 @@ class ComingSoonCard extends StatelessWidget {
           padding: const EdgeInsets.only(right: 10, top: 10),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            ImageComponent(url: data["image"]!, height: 170, width: 140),
+            ImageComponent(url: data.posterPath, height: 170, width: 140),
             const SizedBox(height: 10),
             SizedBox(
               width: 140,
-              child: Text(data["title"]!,
+              child: Text(data.title,
                   overflow: TextOverflow.fade,
                   maxLines: 1,
                   softWrap: false,
@@ -83,10 +96,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  final dio = Dio();
+  UserModel? _auth;
+
   late AnimationController _ColorAnimationController;
   late AnimationController _TextAnimationController;
   late Animation _colorTween, _iconColorTween;
   late Animation<Offset> _transTween;
+
+  List<MovieList> _upcomings = [];
+  List<MovieList> _populars = [];
+  List<MovieList> _inTheaters = [];
 
   @override
   void initState() {
@@ -97,13 +117,23 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     _iconColorTween = ColorTween(begin: Colors.grey, end: Colors.white)
         .animate(_ColorAnimationController);
 
-
     _TextAnimationController =
         AnimationController(vsync: this, duration: Duration(seconds: 0));
 
     _transTween = Tween(begin: Offset(-10, 40), end: Offset(-10, 0))
         .animate(_TextAnimationController);
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          // Add a custom header to the request
+          options.headers['Authorization'] =
+              'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0ODk2NzZmMGY5ODdhY2IxNTk5YTE4ZDQwMDgzYzI0MiIsInN1YiI6IjY0ZTE3ZGEzZTE5ZGU5MDEwMGU5MTkwZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.0WBoauQ1IOL14fRlRv8z9W9GrPLG2_lv0-Mst0dnh0g';
+          return handler.next(options);
+        },
+      ),
+    );
 
+    _init();
     super.initState();
   }
 
@@ -116,6 +146,53 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       return true;
     }
     return false;
+  }
+
+  void _init() async {
+    EasyLoading.instance.indicatorType = EasyLoadingIndicatorType.ring;
+    EasyLoading.show(status: 'Loading..', maskType: EasyLoadingMaskType.black);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String encodedAuth = prefs.getString('auth') ?? "{}";
+    setState(() {
+      _auth = UserModel.fromJson(json.decode(encodedAuth));
+    });
+    List<MovieList> _upcomingsData = await getUpcomingMovies();
+    List<MovieList> _popularsData = await getPopularMovies();
+    List<MovieList> _inTheatersData = await getInTheaterMovies();
+
+    setState(() {
+      _upcomings = _upcomingsData;
+      _populars = _popularsData;
+      _inTheaters = _inTheatersData;
+    });
+    EasyLoading.dismiss();
+  }
+
+  Future<List<MovieList>> getUpcomingMovies() async {
+    final response = await dio.get(
+        'https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1');
+    List<MovieList> _items = response.data['results'].map<MovieList>((_item) {
+      return MovieList.fromJson(_item);
+    }).toList();
+    return _items.take(6).toList();
+  }
+
+  Future<List<MovieList>> getPopularMovies() async {
+    final response = await dio.get(
+        'https://api.themoviedb.org/3/movie/popular?language=en-US&page=1');
+    List<MovieList> _items = response.data['results'].map<MovieList>((_item) {
+      return MovieList.fromJson(_item);
+    }).toList();
+    return _items.take(8).toList();
+  }
+
+  Future<List<MovieList>> getInTheaterMovies() async {
+    final response = await dio.get(
+        'https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1');
+    List<MovieList> _items = response.data['results'].map<MovieList>((_item) {
+      return MovieList.fromJson(_item);
+    }).toList();
+    return _items.take(8).toList();
   }
 
   @override
@@ -132,67 +209,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     ];
     final TabController _tabController =
         TabController(length: categories.length, vsync: this);
-
-    const List<Map<String, String>> banners = [
-      {
-        "title": "Paper Towns",
-        "image":
-            "https://www.themoviedb.org/t/p/original/1AEeyAoy5gN6pDoZLxRupPlCQzt.jpg"
-      },
-      {
-        "title": "Godzilla",
-        "image":
-            "https://www.themoviedb.org/t/p/original/6CLNOzMXO9bvapDD8gsdwkJU4wN.jpg"
-      },
-      {
-        "title": "Weathering with You",
-        "image":
-            "https://www.themoviedb.org/t/p/original/wRDyTXw5j0RN9M03xZlHYkoNLCI.jpg"
-      },
-      {
-        "title": "Black Adam",
-        "image":
-            "https://www.themoviedb.org/t/p/original/lu9zNcGQKTGiKbbHpAsqxwrGy4W.jpg"
-      },
-      {
-        "title": "Barbie",
-        "image":
-            "https://www.themoviedb.org/t/p/original/ctMserH8g2SeOAnCw5gFjdQF8mo.jpg"
-      },
-    ];
-
-    const List<Map<String, String>> _inTheaters = [
-      {
-        "title": "Parasite",
-        "vote": "85%",
-        "image":
-            "https://www.themoviedb.org/t/p/original/hiKmpZMGZsrkA3cdce8a7Dpos1j.jpg"
-      },
-      {
-        "title": "La La Land",
-        "vote": "79%",
-        "image":
-            "https://www.themoviedb.org/t/p/original/meGzYSwHzBWNQk9lYVNxdUrFqiC.jpg"
-      },
-      {
-        "title": "The Big Short",
-        "vote": "73%",
-        "image":
-            "https://www.themoviedb.org/t/p/original/ksPCyJsU1qogGR2At9RjPoxXUVp.jpg"
-      },
-      {
-        "title": "Eureka Seven: Hi Evo",
-        "vote": "63%",
-        "image":
-            "https://www.themoviedb.org/t/p/original/aLLTfRD7EfbE9GVyosknReARNHI.jpg"
-      },
-      {
-        "title": "The Godfather",
-        "vote": "87%",
-        "image":
-            "https://www.themoviedb.org/t/p/original/rSPw7tgCH9c6NqICZef4kZjFOQ5.jpg"
-      },
-    ];
 
     final List<Tab> tabs =
         categories.map<Tab>((category) => Tab(child: Text(category))).toList();
@@ -262,12 +278,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     child: Swiper(
                       itemBuilder: (BuildContext context, int index) {
                         return Image.network(
-                          banners[index]["image"]!,
+                          _populars[index].posterPath,
                           fit: BoxFit.cover,
                         );
                       },
                       autoplay: true,
-                      itemCount: banners.length,
+                      itemCount: _populars.length,
                       pagination: SwiperPagination(
                           margin: const EdgeInsets.all(0.0),
                           builder: SwiperCustomPagination(builder:
@@ -291,13 +307,23 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                         left: 10, right: 10),
                                     child: Row(
                                       children: [
-                                        Text(
-                                          banners[config.activeIndex]["title"]!,
-                                          style:
-                                              constSecondaryTextStyle.copyWith(
-                                                  fontSize: 20.0,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold),
+                                        SizedBox(
+                                          width: 240,
+                                          child: Text(
+                                              _populars.isNotEmpty
+                                                  ? _populars[
+                                                          config.activeIndex]
+                                                      .title
+                                                  : '-',
+                                              overflow: TextOverflow.fade,
+                                              maxLines: 1,
+                                              softWrap: false,
+                                              style: constSecondaryTextStyle
+                                                  .copyWith(
+                                                      fontSize: 20.0,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold)),
                                         ),
                                         Expanded(
                                           child: Align(
@@ -348,12 +374,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text("Fahmi Fitnanda",
+                              Text(_auth != null ? _auth!.name : '-',
                                   style: constTextStyle.copyWith(
                                       color: Colors.white,
                                       fontWeight: FontWeight.normal,
                                       fontSize: 20)),
-                              Text("IDR 280,000",
+                              Text(_auth != null ? _auth!.balanceFormat! : '-',
                                   style: constNumberTextStyle.copyWith(
                                       color: Colors.white, fontSize: 23))
                             ],
@@ -458,7 +484,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           height: 220,
                           child: ListView(
                             scrollDirection: Axis.horizontal,
-                            children: _inTheaters
+                            children: _upcomings
                                 .map((data) => ComingSoonCard(data: data))
                                 .toList(),
                           ),

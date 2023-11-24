@@ -22,6 +22,6 @@ class UserService {
     DocumentSnapshot snapshot = await _userCollection.doc(id).get();
 
     return UserModel(id: id, email: snapshot['email'], name: snapshot['name'], balance: snapshot['balance'],
-        selectedGenres: snapshot['selectedGenres'], selectedLanguage: snapshot['selectedLanguage']);
+        selectedGenres: List<String>.from(snapshot['selectedGenres']), selectedLanguage: snapshot['selectedLanguage']);
   }
 }
