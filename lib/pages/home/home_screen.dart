@@ -19,6 +19,13 @@ class InTheaterCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         behavior: HitTestBehavior.translucent,
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            'movie-detail',
+            arguments: {"id": data.id},
+          );
+        },
         child: Padding(
           padding: const EdgeInsets.only(right: 10, top: 10),
           child:
@@ -68,6 +75,13 @@ class ComingSoonCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         behavior: HitTestBehavior.translucent,
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            'movie-detail',
+            arguments: {"id": data.id},
+          );
+        },
         child: Padding(
           padding: const EdgeInsets.only(right: 10, top: 10),
           child:

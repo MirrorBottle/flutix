@@ -4,6 +4,7 @@ import 'package:flutix/pages/auth/log_in_screen.dart';
 import 'package:flutix/pages/auth/sign_up_screen.dart';
 import 'package:flutix/pages/home/main_screen.dart';
 import 'package:flutix/pages/misc/splash_screen.dart';
+import 'package:flutix/pages/movie/movie_detail_screen.dart';
 import 'package:flutix/pages/order/order_date.dart';
 import 'package:flutix/pages/order/order_seat.dart';
 import 'package:flutix/pages/profile/profile_screen.dart';
@@ -20,7 +21,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());
@@ -34,7 +34,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (BuildContext context) => SignUpProvider())
+        ChangeNotifierProvider(
+            create: (BuildContext context) => SignUpProvider())
       ],
       child: MaterialApp(
           title: 'Flutix',
@@ -45,11 +46,10 @@ class MyApp extends StatelessWidget {
                 elevation: 0,
                 backgroundColor: Colors.white),
             inputDecorationTheme: const InputDecorationTheme(
-              floatingLabelStyle: TextStyle(
-                fontSize: 20,
-                color: constPrimaryColor
-              ),
-              border: OutlineInputBorder(borderSide: BorderSide(color: kBorderColorTextField)),
+              floatingLabelStyle:
+                  TextStyle(fontSize: 20, color: constPrimaryColor),
+              border: OutlineInputBorder(
+                  borderSide: BorderSide(color: kBorderColorTextField)),
               hintStyle: TextStyle(color: constPrimaryColor),
               labelStyle: TextStyle(color: constPrimaryColor),
               filled: true,
@@ -65,7 +65,12 @@ class MyApp extends StatelessWidget {
             ),
           ),
           builder: EasyLoading.init(),
-          home: const SplashScreen()),
+          home: const SplashScreen(),
+          routes: {
+            'movie-detail': (context) => MovieDetailScreen(
+                args: ModalRoute.of(context)!.settings.arguments
+                    as Map<String, dynamic>),
+          }),
     );
   }
 }
