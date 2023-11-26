@@ -1,7 +1,16 @@
+import 'dart:convert';
+
+import 'package:flutix/models/user.dart';
+import 'package:flutix/pages/home/main_screen.dart';
+import 'package:flutix/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutix/globals.dart';
 import 'package:flutix/components/button_component.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class ProfileUpdateScreen extends StatefulWidget {
   const ProfileUpdateScreen({Key? key}) : super(key: key);
@@ -11,7 +20,50 @@ class ProfileUpdateScreen extends StatefulWidget {
 }
 
 class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
+  static final db = FirebaseFirestore.instance;
+  final TextEditingController _newnameController = TextEditingController();
+  final TextEditingController _newemailController = TextEditingController();
+
+  UserModel? _auth;
+
+  void _init() async {
+    EasyLoading.instance.indicatorType = EasyLoadingIndicatorType.ring;
+    EasyLoading.show(status: 'Loading..', maskType: EasyLoadingMaskType.black);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String encodedAuth = prefs.getString('auth') ?? "{}";
+    setState(() {
+      _auth = UserModel.fromJson(json.decode(encodedAuth));
+    });
+    _newnameController.text = _auth!.name;
+    _newemailController.text = _auth!.email;
+    EasyLoading.dismiss();
+  }
+
+  void _handlesubmit() async {
+    await db.collection("users").doc(_auth!.id).update(
+        {"name": _newnameController.text, "email": _newemailController.text});
+    UserModel user = await UserService.getUser(_auth!.id);
+    String _authData = json.encode(user.toMap());
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('auth', _authData);
+    showTopSnackBar(
+      Overlay.of(context),
+      const CustomSnackBar.success(
+        message: "Update Success, Lets Go!",
+      ),
+    );
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const MainScreen()),
+    );
+  }
+
   @override
+  void initState() {
+    super.initState();
+    _init();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
@@ -66,7 +118,9 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 10,),
+            const SizedBox(
+              height: 10,
+            ),
             Container(
               constraints: BoxConstraints(
                   minHeight: MediaQuery.of(context).size.height - 347),
@@ -95,6 +149,7 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                   SizedBox(
                       height: 60.0,
                       child: TextFormField(
+                        controller: _newnameController,
                         decoration: InputDecoration(
                           hintText: "Insert your full name",
                           hintStyle: constSecondaryTextStyle.copyWith(
@@ -122,6 +177,7 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                   SizedBox(
                       height: 60.0,
                       child: TextFormField(
+                        controller: _newemailController,
                         decoration: InputDecoration(
                           hintText: "Insert your email",
                           hintStyle: constSecondaryTextStyle.copyWith(
@@ -136,65 +192,16 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                         },
                       )),
                   const SizedBox(
-                    height: 20,
+                    height: 200,
                   ),
-                  Text("New Password",
-                      style: constTextStyle.copyWith(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold)),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  SizedBox(
-                      height: 60.0,
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          hintText: "Insert your new password",
-                          hintStyle: constSecondaryTextStyle.copyWith(
-                              color: constPrimaryColor, fontSize: 15),
-                          fillColor: Colors.white,
-                        ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Password tidak boleh kosong';
-                          }
-                          return null;
-                        },
-                      )),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Text("Confirm Password",
-                      style: constTextStyle.copyWith(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold)),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  SizedBox(
-                      height: 60.0,
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          hintText: "Confirm your new password",
-                          hintStyle: constSecondaryTextStyle.copyWith(
-                              color: constPrimaryColor, fontSize: 15),
-                          fillColor: Colors.white,
-                        ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Password tidak boleh kosong';
-                          }
-                          return null;
-                        },
-                      )),
                   const SizedBox(
                     height: 20.0,
                   ),
                   ButtonComponent(
                     buttontext: 'Update Now',
-                    onPressed: () {},
+                    onPressed: () {
+                      _handlesubmit();
+                    },
                     invert: true,
                   ),
                   const SizedBox(height: 10),
