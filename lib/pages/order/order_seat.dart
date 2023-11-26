@@ -1,10 +1,14 @@
 import 'package:flutix/components/button_component.dart';
 import 'package:flutix/pages/home/main_screen.dart';
+import 'package:flutix/pages/order/order_confirm.dart';
+import 'package:flutix/providers/ticket_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutix/globals.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'dart:math';
+
+import 'package:provider/provider.dart';
 
 class SeatComponent extends StatelessWidget {
   final String seat;
@@ -61,7 +65,7 @@ class _OrderSeatScreenState extends State<OrderSeatScreen>
   final _seatRows = 7;
 
   List<String> _seats = [];
-  List<String> _selectedSeats = ["D1", "D2", "D3", "E1", "E2", "E3"];
+  List<String> _selectedSeats = [];
   List<String> _soldSeats = ["A4", "B1", "B2", "C1", "C3", "C6"];
   @override
   void initState() {
@@ -86,6 +90,8 @@ class _OrderSeatScreenState extends State<OrderSeatScreen>
           ? _selectedSeats.remove(seat)
           : _selectedSeats.add(seat);
     });
+    Provider.of<TicketProvider>(context, listen: false)
+        .changeSeatsData(seats: _selectedSeats);
   }
 
   @override
@@ -262,7 +268,7 @@ class _OrderSeatScreenState extends State<OrderSeatScreen>
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const MainScreen()),
+                              builder: (context) => const OrderConfirmScreen()),
                         );
                       },
                     ),

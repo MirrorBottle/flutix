@@ -16,6 +16,7 @@ import 'package:flutix/pages/profile/profile_screen.dart';
 import 'package:flutix/pages/order/order_confirm.dart';
 import 'package:flutix/pages/order/order_success.dart';
 import 'package:flutix/providers/sign_up_provider.dart';
+import 'package:flutix/providers/ticket_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +36,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (BuildContext context) => SignUpProvider())
+            create: (BuildContext context) => SignUpProvider()),
+        ChangeNotifierProvider(
+            create: (BuildContext context) => TicketProvider())
       ],
       child: MaterialApp(
           title: 'Flutix',
@@ -65,7 +68,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
           builder: EasyLoading.init(),
-          home: const SplashScreen(),
+          home: const OrderConfirmScreen(),
           routes: {
             'movie-detail': (context) => MovieDetailScreen(
                 args: ModalRoute.of(context)!.settings.arguments

@@ -4,9 +4,12 @@ import 'package:flutix/models/movie.dart';
 import 'package:flutix/pages/auth/sign_up_screen.dart';
 import 'package:flutix/pages/home/home_screen.dart';
 import 'package:flutix/pages/home/main_screen.dart';
+import 'package:flutix/pages/order/order_date.dart';
+import 'package:flutix/providers/ticket_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutix/globals.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
 
 class CastCard extends StatelessWidget {
   final MovieDetailCast data;
@@ -78,18 +81,21 @@ List<Widget> buildStarRating(double rating) {
   List<Widget> starIcons = [];
 
   // Add full stars
-  starIcons.addAll(List.generate(fullStars, (index) => Icon(Icons.star, color: constTernaryColor)));
-  
+  starIcons.addAll(List.generate(
+      fullStars, (index) => Icon(Icons.star, color: constTernaryColor)));
+
   // Add half star if needed
-  starIcons.addAll(List.generate(halfStars, (index) => Icon(Icons.star_half, color: constTernaryColor)));
+  starIcons.addAll(List.generate(
+      halfStars, (index) => Icon(Icons.star_half, color: constTernaryColor)));
 
   // Add gray stars only if there are positive grayStars
-  starIcons.addAll(List.generate(grayStars > 0 ? grayStars : 0, (index) => Icon(Icons.star, color: Colors.grey)));
-
+  starIcons.addAll(List.generate(grayStars > 0 ? grayStars : 0,
+      (index) => Icon(Icons.star, color: Colors.grey)));
 
   // Return a row of star icons
   return starIcons;
 }
+
 class MovieDetailScreen extends StatefulWidget {
   final Map<String, dynamic>? args;
   const MovieDetailScreen({this.args, Key? key}) : super(key: key);
@@ -121,12 +127,13 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   void _init() async {
     EasyLoading.instance.indicatorType = EasyLoadingIndicatorType.ring;
     EasyLoading.show(status: 'Loading..', maskType: EasyLoadingMaskType.black);
-    final movieResponse = await dio
-        .get("https://api.themoviedb.org/3/movie/${widget.args!['id']}?language=en-US");
-    final castResponse = await dio
-        .get("https://api.themoviedb.org/3/movie/${widget.args!['id']}/credits?language=en-US");
+    final movieResponse = await dio.get(
+        "https://api.themoviedb.org/3/movie/${widget.args!['id']}?language=en-US");
+    final castResponse = await dio.get(
+        "https://api.themoviedb.org/3/movie/${widget.args!['id']}/credits?language=en-US");
     MovieDetail movieData = MovieDetail.fromJson(movieResponse.data);
-    List<MovieDetailCast> castData = castResponse.data['cast'].map<MovieDetailCast>((_item) {
+    List<MovieDetailCast> castData =
+        castResponse.data['cast'].map<MovieDetailCast>((_item) {
       return MovieDetailCast.fromJson(_item);
     }).toList();
     setState(() {
@@ -234,7 +241,8 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold)),
                                 const SizedBox(height: 5),
-                                Text("${_movie!.releaseDate} • ${_movie!.runtime ~/ 60}h ${_movie!.runtime % 60}m",
+                                Text(
+                                    "${_movie!.releaseDate} • ${_movie!.runtime ~/ 60}h ${_movie!.runtime % 60}m",
                                     style: constSecondaryTextStyle.copyWith(
                                         color: Colors.white, fontSize: 15)),
                                 const SizedBox(height: 15),
@@ -287,8 +295,8 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                             const SizedBox(height: 10),
                             Wrap(
                               children: [
-                                ...
-                                    _movie!.genres.map((genre) => Container(
+                                ..._movie!.genres
+                                    .map((genre) => Container(
                                           padding: const EdgeInsets.all(8),
                                           margin: const EdgeInsets.only(
                                               right: 5, top: 5),
@@ -331,19 +339,35 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                     bottom: 0,
                     left: 0,
                     right: 0,
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                        color: constSecondaryColor,
-                      ),
-                      padding: const EdgeInsets.only(top: 15, bottom: 15),
-                      child: Text("Ready to Roll?",
-                          style: constTextStyle.copyWith(
-                              color: constTernaryColor,
-                              fontSize: 23,
-                              fontWeight: FontWeight.bold)),
-                    ))
+                    child: GestureDetector(
+                        onTap: () {
+                          Provider.of<TicketProvider>(context, listen: false)
+                              .changeMovieData(
+                                  movieBackdrop: _movie!.backdropPath,
+                                  movieId: _movie!.id,
+                                  movieLanguage: _movie!.language,
+                                  moviePoster: _movie!.posterPath,
+                                  movieTitle: _movie!.title,
+                                  movieVote: _movie!.voteAverage);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const OrderDateScreen()),
+                          );
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            color: constSecondaryColor,
+                          ),
+                          padding: const EdgeInsets.only(top: 15, bottom: 15),
+                          child: Text("Ready to Roll?",
+                              style: constTextStyle.copyWith(
+                                  color: constTernaryColor,
+                                  fontSize: 23,
+                                  fontWeight: FontWeight.bold)),
+                        )))
               ],
             )
           : const Placeholder(),

@@ -62,14 +62,14 @@ class CastCard extends StatelessWidget {
   }
 }
 
-class OrderConfirm extends StatefulWidget {
-  const OrderConfirm({Key? key}) : super(key: key);
+class OrderConfirmScreen extends StatefulWidget {
+  const OrderConfirmScreen({Key? key}) : super(key: key);
 
   @override
-  _OrderConfirmState createState() => _OrderConfirmState();
+  _OrderConfirmScreenState createState() => _OrderConfirmScreenState();
 }
 
-class _OrderConfirmState extends State<OrderConfirm> {
+class _OrderConfirmScreenState extends State<OrderConfirmScreen> {
   @override
   void initState() {
     super.initState();
@@ -221,14 +221,14 @@ class _OrderConfirmState extends State<OrderConfirm> {
                       ListTile(
                         contentPadding: EdgeInsets.all(0),
                         leading: Text(
-                          "2 Ticket",
+                          "Seats",
                           style: constTextStyle.copyWith(
                               color: Colors.white,
                               fontSize: 18,
                               fontWeight: FontWeight.bold),
                         ),
                         trailing: Text("C1, C2",
-                            style: constSecondaryTextStyle.copyWith(
+                            style: constLabelNumberTextStyle.copyWith(
                                 color: constTernaryColor,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold)),
@@ -236,7 +236,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
                       ListTile(
                         contentPadding: EdgeInsets.all(0),
                         leading: Text(
-                          "Seat",
+                          "Ticket(s)",
                           style: constTextStyle.copyWith(
                               color: constTernaryColor,
                               fontSize: 18,
@@ -257,7 +257,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
                               fontSize: 18,
                               fontWeight: FontWeight.bold),
                         ),
-                        trailing: Text("Rp. 10.000 x2",
+                        trailing: Text("Rp. 10.000",
                             style: constNumberTextStyle.copyWith(
                                 color: constTernaryColor,
                                 fontSize: 18,
