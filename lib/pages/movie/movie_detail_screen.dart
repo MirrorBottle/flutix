@@ -1,13 +1,18 @@
+import 'package:dio/dio.dart';
 import 'package:flutix/components/button_component.dart';
+import 'package:flutix/models/movie.dart';
 import 'package:flutix/pages/auth/sign_up_screen.dart';
 import 'package:flutix/pages/home/home_screen.dart';
 import 'package:flutix/pages/home/main_screen.dart';
+import 'package:flutix/pages/order/order_date.dart';
+import 'package:flutix/providers/ticket_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutix/globals.dart';
-
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
 
 class CastCard extends StatelessWidget {
-  final Map<String, String> data;
+  final MovieDetailCast data;
   const CastCard({Key? key, required this.data}) : super(key: key);
 
   @override
@@ -28,7 +33,7 @@ class CastCard extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(data["image"]!),
+                      image: NetworkImage(data.profilePath),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -40,16 +45,18 @@ class CastCard extends StatelessWidget {
             const SizedBox(height: 10),
             SizedBox(
               width: 100,
-              child: Text(data["name"]!,
+              child: Text(data.name,
                   overflow: TextOverflow.fade,
                   maxLines: 1,
                   softWrap: false,
                   style: constSecondaryTextStyle.copyWith(
-                      color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold)),
             ),
             SizedBox(
               width: 100,
-              child: Text(data["character"]!,
+              child: Text(data.character,
                   overflow: TextOverflow.fade,
                   maxLines: 1,
                   softWrap: false,
@@ -61,42 +68,80 @@ class CastCard extends StatelessWidget {
   }
 }
 
+List<Widget> buildStarRating(double rating) {
+  // Ensure the rating is within the valid range (0 to 5)
+  rating = rating / 2;
+
+  // Determine the number of full stars, half stars, and gray stars
+  int fullStars = rating.floor();
+  int halfStars = ((rating - fullStars)).round();
+  int grayStars = 5 - fullStars - halfStars;
+
+  // Create a list of star icons
+  List<Widget> starIcons = [];
+
+  // Add full stars
+  starIcons.addAll(List.generate(
+      fullStars, (index) => Icon(Icons.star, color: constTernaryColor)));
+
+  // Add half star if needed
+  starIcons.addAll(List.generate(
+      halfStars, (index) => Icon(Icons.star_half, color: constTernaryColor)));
+
+  // Add gray stars only if there are positive grayStars
+  starIcons.addAll(List.generate(grayStars > 0 ? grayStars : 0,
+      (index) => Icon(Icons.star, color: Colors.grey)));
+
+  // Return a row of star icons
+  return starIcons;
+}
+
 class MovieDetailScreen extends StatefulWidget {
-  const MovieDetailScreen({Key? key}) : super(key: key);
+  final Map<String, dynamic>? args;
+  const MovieDetailScreen({this.args, Key? key}) : super(key: key);
 
   @override
   _MovieDetailScreenState createState() => _MovieDetailScreenState();
 }
 
 class _MovieDetailScreenState extends State<MovieDetailScreen> {
+  final dio = Dio();
+  MovieDetail? _movie;
+  List<MovieDetailCast> _casts = [];
   @override
   void initState() {
     super.initState();
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          // Add a custom header to the request
+          options.headers['Authorization'] =
+              'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0ODk2NzZmMGY5ODdhY2IxNTk5YTE4ZDQwMDgzYzI0MiIsInN1YiI6IjY0ZTE3ZGEzZTE5ZGU5MDEwMGU5MTkwZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.0WBoauQ1IOL14fRlRv8z9W9GrPLG2_lv0-Mst0dnh0g';
+          return handler.next(options);
+        },
+      ),
+    );
+    _init();
   }
 
-
-  final List<Map<String ,String>> _casts = [
-    {
-      "name": "Nat Wolff",
-      "character": "Quentin",
-      "image": "https://www.themoviedb.org/t/p/w138_and_h175_face/g9noCweddwSb3VBSRpX3vo7TbuP.jpg"
-    },
-    {
-      "name": "Cara Delevingne",
-      "character": "Margo",
-      "image": "https://www.themoviedb.org/t/p/w138_and_h175_face/fxpve7evj6H1kl8rTnDqNyIdObI.jpg"
-    },
-    {
-      "name": "Austin Abrams",
-      "character": "Ben",
-      "image": "https://www.themoviedb.org/t/p/w138_and_h175_face/9pSpSAk9NsYC5puqAVsmSK3OSeu.jpg"
-    },
-    {
-      "name": "Halston Sage",
-      "character": "Lacey",
-      "image": "https://www.themoviedb.org/t/p/w138_and_h175_face/lFQog3AzxHXAteUz8n2PIJsLQbe.jpg"
-    }
-  ];
+  void _init() async {
+    EasyLoading.instance.indicatorType = EasyLoadingIndicatorType.ring;
+    EasyLoading.show(status: 'Loading..', maskType: EasyLoadingMaskType.black);
+    final movieResponse = await dio.get(
+        "https://api.themoviedb.org/3/movie/${widget.args!['id']}?language=en-US");
+    final castResponse = await dio.get(
+        "https://api.themoviedb.org/3/movie/${widget.args!['id']}/credits?language=en-US");
+    MovieDetail movieData = MovieDetail.fromJson(movieResponse.data);
+    List<MovieDetailCast> castData =
+        castResponse.data['cast'].map<MovieDetailCast>((_item) {
+      return MovieDetailCast.fromJson(_item);
+    }).toList();
+    setState(() {
+      _movie = movieData;
+      _casts = castData.take(6).toList();
+    });
+    EasyLoading.dismiss();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,198 +163,214 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           ),
         ),
       ),
-      body: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          // * BACKDROP
-          Positioned(
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 300,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(
-                        "https://www.themoviedb.org/t/p/original/j2LJCbVXPOFr71oHV9izq2OBSyg.jpg"),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              top: 0),
-
-          // * BACKDROP OVERLAY
-
-          Positioned(
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 300,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                      colors: <Color>[constPrimaryColor, Colors.transparent]),
-                ),
-              ),
-              top: 0),
-          // * POSTER
-          Positioned(
-              top: 100,
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Material(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                      clipBehavior: Clip.antiAlias,
-                      color: constPrimaryColor,
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(
-                                "https://www.themoviedb.org/t/p/original/lVW67w7eWwmBhbBCc4f983pO8m6.jpg"),
-                            fit: BoxFit.cover,
-                          ),
+      body: _movie != null
+          ? Stack(
+              clipBehavior: Clip.none,
+              children: [
+                // * BACKDROP
+                Positioned(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 300,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(_movie!.backdropPath),
+                          fit: BoxFit.cover,
                         ),
-                        width: 130,
-                        height: 195,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                    top: 0),
+
+                // * BACKDROP OVERLAY
+
+                Positioned(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 300,
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            colors: <Color>[
+                              constPrimaryColor,
+                              Colors.transparent
+                            ]),
+                      ),
+                    ),
+                    top: 0),
+                // * POSTER
+                Positioned(
+                    top: 100,
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Paper Towns",
-                              style: constHeadingStyle.copyWith(
-                                  color: Colors.white, fontSize: 28)),
-                          const SizedBox(height: 10),
-                          Text("Jake Schreir",
-                              style: constSecondaryTextStyle.copyWith(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 5),
-                          Text("07/24/2015 • 1h 49m",
-                              style: constSecondaryTextStyle.copyWith(
-                                  color: Colors.white, fontSize: 15)),
-                          const SizedBox(height: 15),
-                          Row(
-                            children: [
-                              Text("8.3",
-                                  style: constNumberTextStyle.copyWith(
-                                      color: constTernaryColor, fontSize: 20)),
-                              const SizedBox(
-                                width: 10,
+                          Material(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0)),
+                            clipBehavior: Clip.antiAlias,
+                            color: constPrimaryColor,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(_movie!.posterPath),
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                              const Icon(
-                                Icons.star,
-                                color: constTernaryColor,
-                              ),
-                              const Icon(
-                                Icons.star,
-                                color: constTernaryColor,
-                              ),
-                              const Icon(
-                                Icons.star,
-                                color: constTernaryColor,
-                              ),
-                              const Icon(
-                                Icons.star,
-                                color: constTernaryColor,
-                              ),
-                              const Icon(
-                                Icons.star,
-                                color: Colors.grey,
-                              )
-                            ],
+                              width: 130,
+                              height: 195,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 200,
+                                  child: Text(_movie!.title,
+                                      style: constHeadingStyle.copyWith(
+                                          color: Colors.white, fontSize: 28)),
+                                ),
+                                const SizedBox(height: 10),
+                                Text(_movie!.language,
+                                    style: constSecondaryTextStyle.copyWith(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold)),
+                                const SizedBox(height: 5),
+                                Text(
+                                    "${_movie!.releaseDate} • ${_movie!.runtime ~/ 60}h ${_movie!.runtime % 60}m",
+                                    style: constSecondaryTextStyle.copyWith(
+                                        color: Colors.white, fontSize: 15)),
+                                const SizedBox(height: 15),
+                                Row(
+                                  children: [
+                                    Text(_movie!.voteAverage.toString(),
+                                        style: constNumberTextStyle.copyWith(
+                                            color: constTernaryColor,
+                                            fontSize: 20)),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    ...buildStarRating(_movie!.voteAverage),
+                                  ],
+                                )
+                              ],
+                            ),
                           )
                         ],
                       ),
-                    )
-                  ],
-                ),
-              )),
+                    )),
 
-          // * MAIN CONTENT
-          Positioned(
-              top: 320,
-              bottom: 60,
-              left: 0,
-              right: 0,
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                padding: const EdgeInsets.all(20.0),
-                height: 1000,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30.0),
-                      topRight: Radius.circular(30.0)),
-                  color: constPrimaryColor,
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Overview", style: constHeadingStyle.copyWith(color: Colors.white, fontSize: 22)),
-                      const SizedBox(height: 15),
-                      const Text(
-                          "Quentin Jacobsen has spent a lifetime loving the magnificently adventurous Margo Roth Spiegelman from afar. So when she cracks open a window and climbs back into his life-dressed like a ninja and summoning him for an ingenious campaign of revenge-he follows. After their all-nighter ends and a new day breaks, Q arrives at school to discover that Margo, always an enigma, has now become a mystery. But Q soon learns that there are clues-and they're for him. Urged down a disconnected path, the closer he gets, the less Q sees of the girl he thought he knew.",
-                          style: TextStyle(color: Colors.white, height: 1.4)),
-                      const SizedBox(height: 10),
-                      Wrap(
-                        children: [
-                          ...["Mystery", "Comedy", "Romance", "Drama", "Young Adult"].map((genre) => Container(
-                            padding: const EdgeInsets.all(8),
-                            margin: const EdgeInsets.only(right: 5, top: 5),
-                            decoration: const BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
-                              color: constSecondaryColor,
-                            ),
-                            child: Text(
-                              genre,
-                              style: constSecondaryTextStyle.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          )).toList(),
-                        ],
+                // * MAIN CONTENT
+                Positioned(
+                    top: 320,
+                    bottom: 60,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: const EdgeInsets.all(20.0),
+                      height: 1000,
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30.0),
+                            topRight: Radius.circular(30.0)),
+                        color: constPrimaryColor,
                       ),
-                      const SizedBox(height: 30),
-                      Text("Cast", style: constHeadingStyle.copyWith(color: Colors.white, fontSize: 22)),
-                      const SizedBox(height: 15),
-                      SizedBox(
-                        height: 250,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: _casts
-                              .map((data) => CastCard(data: data))
-                              .toList(),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Overview",
+                                style: constHeadingStyle.copyWith(
+                                    color: Colors.white, fontSize: 22)),
+                            const SizedBox(height: 15),
+                            Text(_movie!.overview,
+                                style: const TextStyle(
+                                    color: Colors.white, height: 1.4)),
+                            const SizedBox(height: 10),
+                            Wrap(
+                              children: [
+                                ..._movie!.genres
+                                    .map((genre) => Container(
+                                          padding: const EdgeInsets.all(8),
+                                          margin: const EdgeInsets.only(
+                                              right: 5, top: 5),
+                                          decoration: const BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5)),
+                                            color: constSecondaryColor,
+                                          ),
+                                          child: Text(
+                                            genre,
+                                            style: constSecondaryTextStyle
+                                                .copyWith(
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                          ),
+                                        ))
+                                    .toList(),
+                              ],
+                            ),
+                            const SizedBox(height: 30),
+                            Text("Cast",
+                                style: constHeadingStyle.copyWith(
+                                    color: Colors.white, fontSize: 22)),
+                            const SizedBox(height: 15),
+                            SizedBox(
+                              height: 250,
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: _casts
+                                    .map((data) => CastCard(data: data))
+                                    .toList(),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              )),
-          Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                  color: constSecondaryColor,
-                ),
-                padding: const EdgeInsets.only(top: 15, bottom: 15),
-                child: Text("Ready to Roll?",
-                    style: constTextStyle.copyWith(
-                        color: constTernaryColor, fontSize: 23, fontWeight: FontWeight.bold)),
-              ))
-        ],
-      ),
+                    )),
+                Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: GestureDetector(
+                        onTap: () {
+                          Provider.of<TicketProvider>(context, listen: false)
+                              .changeMovieData(
+                                  movieBackdrop: _movie!.backdropPath,
+                                  movieId: _movie!.id,
+                                  movieLanguage: _movie!.language,
+                                  moviePoster: _movie!.posterPath,
+                                  movieTitle: _movie!.title,
+                                  movieVote: _movie!.voteAverage);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const OrderDateScreen()),
+                          );
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            color: constSecondaryColor,
+                          ),
+                          padding: const EdgeInsets.only(top: 15, bottom: 15),
+                          child: Text("Ready to Roll?",
+                              style: constTextStyle.copyWith(
+                                  color: constTernaryColor,
+                                  fontSize: 23,
+                                  fontWeight: FontWeight.bold)),
+                        )))
+              ],
+            )
+          : const Placeholder(),
     );
   }
 }

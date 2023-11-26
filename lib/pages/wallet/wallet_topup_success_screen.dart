@@ -9,20 +9,20 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutix/globals.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class OrderSuccess extends StatefulWidget {
-  const OrderSuccess({Key? key}) : super(key: key);
+class WalletTopupSuccess extends StatefulWidget {
+  const WalletTopupSuccess({Key? key}) : super(key: key);
 
   @override
-  _OrderSuccessState createState() => _OrderSuccessState();
+  _WalletTopupSuccessState createState() => _WalletTopupSuccessState();
 }
 
-class _OrderSuccessState extends State<OrderSuccess>
+class _WalletTopupSuccessState extends State<WalletTopupSuccess>
     with TickerProviderStateMixin {
   final _scrollController = ScrollController();
 
   var _selectedIndex = 1;
   final _headlines = [
-    ["Light On,", "Sign Up!"],
+    ["Ka-Ching!", "Your're Loaded!"],
     ["Pick Your", "Poisons..."],
     ["All Set,", "Ready to Go?"]
   ];
@@ -113,12 +113,12 @@ class _OrderSuccessState extends State<OrderSuccess>
               child: Column(
                 children: [
                   SvgPicture.asset(
-                    'assets/svg/wallet_topup_success_screen.svg',
+                    'assets/svg/Ninja.svg',
                     width: 280,
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    "Happy Waching!",
+                    "Your Wallet Ninja-fied!",
                     style: constTextStyle.copyWith(
                         color: Colors.white,
                         fontSize: 26,
@@ -127,7 +127,7 @@ class _OrderSuccessState extends State<OrderSuccess>
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "You have successfully \n bought the ticket",
+                    "Ready to Slice Through Ticket Prices \n and Conquer teh Movies? ",
                     style: constSubStyle,
                     textAlign: TextAlign.center,
                   ),

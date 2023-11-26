@@ -1,33 +1,52 @@
-import 'package:equatable/equatable.dart';
-
-class UserModel extends Equatable {
+import 'dart:io';
+import 'package:intl/intl.dart';
+class UserModel {
   final String id;
-  final String email;
-  final String name;
-  //final String profilePicture;
-  final List<String> selectedGenres;
-  final String selectedLanguage;
-  final int balance;
+  String email;
+  String name;
+  List<String> selectedGenres;
+  File? profilePictureFile;
+  String? profilePicture;
+  String selectedLanguage;
+  int balance;
+  String? password;
+  String? balanceFormat;
 
-  // ignore: prefer_const_constructors_in_immutables
-  UserModel(this.id, this.email, this.name, this.selectedGenres,
-      this.selectedLanguage, this.balance);
+  UserModel({
+    required this.id,
+    required this.email,
+    required this.name,
+    required this.selectedGenres,
+    required this.selectedLanguage,
+    required this.balance,
+    this.profilePicture,
+    this.profilePictureFile,
+    this.password,
+    this.balanceFormat
+  });
 
-  @override
-  String toString() {
-    return "[$id] - $name, $email";
+  factory UserModel.fromJson(Map<String, dynamic> _json) {
+    return UserModel(
+      id: _json['id'],
+      email: _json['email'],
+      name: _json['name'],
+      selectedGenres: List<String>.from(_json['selectedGenres']),
+      selectedLanguage: _json['selectedLanguage'],
+      profilePicture: _json['profilePicture'],
+      balance: _json['balance'],
+      balanceFormat: NumberFormat.currency(locale: 'id_ID', symbol: 'IDR ').format(_json['balance']).replaceAll(RegExp(r'\,00$'), ''),
+    );
   }
 
-  @override
-  List<Object?> get props => [
-        id,
-        email,
-        name,
-        balance,
-        //profilePicture,
-        selectedGenres,
-        selectedLanguage
-      ];
-
-  get profilePicture => null;
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'email': email,
+      'name': name,
+      'selectedGenres': selectedGenres,
+      'selectedLanguage': selectedLanguage,
+      'profilePicture': profilePicture,
+      'balance': balance,
+    };
+  }
 }

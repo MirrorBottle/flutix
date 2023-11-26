@@ -1,4 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutix/globals.dart';
+import 'package:flutix/models/user.dart';
+import 'package:flutix/pages/auth/log_in_screen.dart';
+import 'package:flutix/pages/home/main_screen.dart';
+import 'package:flutix/services/auth_service.dart';
+import 'package:flutix/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutix/pages/misc/onboarding_screen.dart';
@@ -30,17 +37,29 @@ class _SplashScreenState extends State<SplashScreen> {
   void goTo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isFirst = prefs.getBool('isFirst') ?? true;
+    bool isLogin = prefs.getBool('isLogin') ?? false;
     if (isFirst) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const OnboardingScreen()),
       );
     } else {
-      // if (isLogin) {
-      //   const MainScreen().launch(context);
-      // } else {
-      //   const SignIn().launch(context);
-      // }
+      if (isLogin) {
+        String encodedAuth = prefs.getString('auth') ?? "{}";
+        Map<String, dynamic> _auth = json.decode(encodedAuth);
+        UserModel user = await UserService.getUser(_auth['id']);
+        String _authData = json.encode(user.toMap());
+        prefs.setString('auth', _authData);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+        );
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const LogInScreen()),
+        );
+      }
     }
   }
 

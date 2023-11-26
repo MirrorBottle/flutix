@@ -4,6 +4,7 @@ import 'package:flutix/pages/home/home_screen.dart';
 import 'package:flutix/pages/home/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutix/globals.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CastCard extends StatelessWidget {
   final Map<String, String> data;
@@ -62,18 +63,45 @@ class CastCard extends StatelessWidget {
   }
 }
 
-class OrderConfirmScreen extends StatefulWidget {
-  const OrderConfirmScreen({Key? key}) : super(key: key);
+class TicketDetailScreen extends StatefulWidget {
+  const TicketDetailScreen({Key? key}) : super(key: key);
 
   @override
-  _OrderConfirmScreenState createState() => _OrderConfirmScreenState();
+  _TicketDetailScreenState createState() => _TicketDetailScreenState();
 }
 
-class _OrderConfirmScreenState extends State<OrderConfirmScreen> {
+class _TicketDetailScreenState extends State<TicketDetailScreen> {
   @override
   void initState() {
     super.initState();
   }
+
+  final List<Map<String, String>> _casts = [
+    {
+      "name": "Nat Wolff",
+      "character": "Quentin",
+      "image":
+          "https://www.themoviedb.org/t/p/w138_and_h175_face/g9noCweddwSb3VBSRpX3vo7TbuP.jpg"
+    },
+    {
+      "name": "Cara Delevingne",
+      "character": "Margo",
+      "image":
+          "https://www.themoviedb.org/t/p/w138_and_h175_face/fxpve7evj6H1kl8rTnDqNyIdObI.jpg"
+    },
+    {
+      "name": "Austin Abrams",
+      "character": "Ben",
+      "image":
+          "https://www.themoviedb.org/t/p/w138_and_h175_face/9pSpSAk9NsYC5puqAVsmSK3OSeu.jpg"
+    },
+    {
+      "name": "Halston Sage",
+      "character": "Lacey",
+      "image":
+          "https://www.themoviedb.org/t/p/w138_and_h175_face/lFQog3AzxHXAteUz8n2PIJsLQbe.jpg"
+    }
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -162,16 +190,46 @@ class _OrderConfirmScreenState extends State<OrderConfirmScreen> {
                               style: constHeadingStyle.copyWith(
                                   color: Colors.white, fontSize: 28)),
                           const SizedBox(height: 10),
-                          Text("Bigmall XXI 21",
+                          Text("Jake Schreir",
                               style: constSecondaryTextStyle.copyWith(
                                   color: Colors.white,
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold)),
                           const SizedBox(height: 5),
-                          Text("Sat 22, 12:00",
+                          Text("07/24/2015 • 1h 49m",
                               style: constSecondaryTextStyle.copyWith(
                                   color: Colors.white, fontSize: 15)),
                           const SizedBox(height: 15),
+                          Row(
+                            children: [
+                              Text("8.3",
+                                  style: constNumberTextStyle.copyWith(
+                                      color: constTernaryColor, fontSize: 20)),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              const Icon(
+                                Icons.star,
+                                color: constTernaryColor,
+                              ),
+                              const Icon(
+                                Icons.star,
+                                color: constTernaryColor,
+                              ),
+                              const Icon(
+                                Icons.star,
+                                color: constTernaryColor,
+                              ),
+                              const Icon(
+                                Icons.star,
+                                color: constTernaryColor,
+                              ),
+                              const Icon(
+                                Icons.star,
+                                color: Colors.grey,
+                              )
+                            ],
+                          )
                         ],
                       ),
                     )
@@ -199,121 +257,148 @@ class _OrderConfirmScreenState extends State<OrderConfirmScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Order Detail",
+                      Text("Ticket Details",
                           style: constHeadingStyle.copyWith(
                               color: Colors.white, fontSize: 22)),
                       const SizedBox(height: 15),
                       ListTile(
                         contentPadding: EdgeInsets.all(0),
                         leading: Text(
-                          "ID Order",
+                          "Cinema",
                           style: constTextStyle.copyWith(
                               color: Colors.white,
                               fontSize: 18,
                               fontWeight: FontWeight.bold),
                         ),
-                        trailing: Text("2208202345231",
+                        trailing: Text("Paris Van Java Mall",
+                            style: constSecondaryTextStyle.copyWith(
+                              color: Colors.white,
+                              fontSize: 18,
+                            )),
+                      ),
+                      ListTile(
+                        contentPadding: EdgeInsets.all(0),
+                        leading: Text(
+                          "Date & Time",
+                          style: constTextStyle.copyWith(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Text("Sat 21/04, 12:00",
+                            style: constSecondaryTextStyle.copyWith(
+                              color: Colors.white,
+                              fontSize: 18,
+                            )),
+                      ),
+                      ListTile(
+                        contentPadding: EdgeInsets.all(0),
+                        leading: Text(
+                          "Price /pcs",
+                          style: constTextStyle.copyWith(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Text("IDR. 50.000",
                             style: constNumberTextStyle.copyWith(
-                                color: Colors.white,
+                                color: constTernaryColor,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold)),
                       ),
                       ListTile(
                         contentPadding: EdgeInsets.all(0),
                         leading: Text(
-                          "Seats",
+                          "Seat",
                           style: constTextStyle.copyWith(
                               color: Colors.white,
                               fontSize: 18,
                               fontWeight: FontWeight.bold),
                         ),
                         trailing: Text("C1, C2",
-                            style: constLabelNumberTextStyle.copyWith(
+                            style: constSecondaryTextStyle.copyWith(
                                 color: constTernaryColor,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold)),
                       ),
-                      ListTile(
-                        contentPadding: EdgeInsets.all(0),
-                        leading: Text(
-                          "Ticket(s)",
-                          style: constTextStyle.copyWith(
-                              color: constTernaryColor,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        trailing: Text("Rp. 120.000 x2",
-                            style: constNumberTextStyle.copyWith(
-                                color: constTernaryColor,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold)),
-                      ),
-                      ListTile(
-                        contentPadding: EdgeInsets.all(0),
-                        leading: Text(
-                          "Fees",
-                          style: constTextStyle.copyWith(
-                              color: constTernaryColor,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        trailing: Text("Rp. 10.000",
-                            style: constNumberTextStyle.copyWith(
-                                color: constTernaryColor,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold)),
-                      ),
-                      ListTile(
-                        contentPadding: EdgeInsets.all(0),
-                        leading: Text(
-                          "Total",
-                          style: constTextStyle.copyWith(
-                              color: constTernaryColor,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        trailing: Text("Rp. 260.000",
-                            style: constNumberTextStyle.copyWith(
-                                color: constTernaryColor,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold)),
-                      ),
-                      const SizedBox(height: 20),
-                      ListTile(
-                        contentPadding: EdgeInsets.all(0),
-                        leading: Text(
-                          "Saldo Wallet",
-                          style: constTextStyle.copyWith(
-                              color: constSuccessColor,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        trailing: Text("Rp. 160.000",
-                            style: constNumberTextStyle.copyWith(
-                                color: constSuccessColor,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold)),
-                      ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 50),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Nama",
+                                style: constTextStyle.copyWith(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "Fahmi Fitnanda",
+                                style: constSecondaryTextStyle.copyWith(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              SizedBox(height: 30),
+                              Text(
+                                "Nama",
+                                style: constTextStyle.copyWith(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "IDR. 100.000",
+                                style: constNumberTextStyle.copyWith(
+                                  color: constTernaryColor,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Image.asset(
+                                'assets/images/QR1.png',
+                                width: 105,
+                              ),
+                              SizedBox(height: 5),
+                              Text("ID A20230121",
+                                  style: constSecondaryTextStyle.copyWith(
+                                    color: kBgColor,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                            ],
+                          )
+                        ],
+                      )
                     ],
                   ),
                 ),
               )),
           Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: ButtonIconComponent(
-              buttontext: "Checkout Now",
-              invert: true,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MainScreen()),
-                );
-              },
-            ),
-          )
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  color: constSecondaryColor,
+                ),
+                padding: const EdgeInsets.only(top: 15, bottom: 15),
+                child: Text("Dwonload Invoice",
+                    style: constTextStyle.copyWith(
+                        color: constTernaryColor,
+                        fontSize: 23,
+                        fontWeight: FontWeight.bold)),
+              ))
         ],
       ),
     );

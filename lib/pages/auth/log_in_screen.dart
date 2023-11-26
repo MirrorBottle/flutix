@@ -7,6 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:flutix/globals.dart';
 import 'package:flutix/services/auth_service.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({Key? key}) : super(key: key);
@@ -16,9 +18,48 @@ class LogInScreen extends StatefulWidget {
 }
 
 class _LogInScreenState extends State<LogInScreen> {
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  bool loading = false;
+
   @override
   void initState() {
     super.initState();
+    init();
+  }
+
+  void init() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isLogin = prefs.getBool('isLogin') ?? false;
+    if (isLogin) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const MainScreen()),
+      );
+    }
+  }
+
+  void _handleSubmit() async {
+    setState(() {
+      loading = true;
+    });
+    try {
+      await AuthService.signIn(_emailController.text, _passwordController.text);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool('isLogin', true);
+      showTopSnackBar(
+        Overlay.of(context),
+        const CustomSnackBar.success(
+          message: "Login Success, Welcome Back!",
+        ),
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const MainScreen()),
+      );
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -74,6 +115,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   SizedBox(
                     height: 60.0,
                     child: AppTextField(
+                      controller: _emailController,
                       textFieldType: TextFieldType.EMAIL,
                       decoration: const InputDecoration(
                         labelText: 'Email',
@@ -91,6 +133,7 @@ class _LogInScreenState extends State<LogInScreen> {
                     height: 20.0,
                   ),
                   AppTextField(
+                    controller: _passwordController,
                     textFieldType: TextFieldType.PASSWORD,
                     decoration: const InputDecoration(
                       labelText: 'Password',
@@ -107,15 +150,9 @@ class _LogInScreenState extends State<LogInScreen> {
                     height: 20.0,
                   ),
                   ButtonComponent(
+                    loading: loading,
                     buttontext: 'Log In',
-                    onPressed: () async {
-                      await AuthService.signUp(
-                          "setiawanbayu66152@gmail.com",
-                          "123123",
-                          "bayu",
-                          ["Drama", "Romance", "Isekai"],
-                          "Japanese");
-                    },
+                    onPressed: _handleSubmit,
                   ),
                   const SizedBox(height: 10),
                   GestureDetector(

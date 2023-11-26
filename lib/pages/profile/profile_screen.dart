@@ -89,6 +89,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                     subtitle: Text("Give us a rating", style: constSecondaryTextStyle.copyWith(color: Colors.white, fontSize: 12,),),
                     trailing: const Icon(Icons.navigate_next, color: Colors.white, size: 28,),
                   ),
+                  ListTile(
+                    leading: Icon(Icons.logout, color: Colors.red[400], size: 36,),
+                    title: Text("Logout", style: constTextStyle.copyWith(color: Colors.red[400], fontSize: 20, fontWeight: FontWeight.bold)),
+                    subtitle: Text("Hope to see you soon, then...", style: constSecondaryTextStyle.copyWith(color: Colors.red[400], fontSize: 12,),),
+                    trailing: Icon(Icons.navigate_next, color: Colors.red[400], size: 28,),
+                  ),
                 ],
               )
             ),
