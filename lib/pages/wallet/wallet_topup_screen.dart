@@ -1,14 +1,23 @@
+import 'dart:convert';
+
 import 'package:flutix/components/button_component.dart';
+import 'package:flutix/models/user.dart';
 import 'package:flutix/pages/auth/log_in_screen.dart';
 import 'package:flutix/pages/auth/sign_up/sign_up_genre_screen.dart';
 import 'package:flutix/pages/auth/sign_up/sign_up_info_screen.dart';
 import 'package:flutix/pages/home/home_screen.dart';
 import 'package:flutix/pages/home/main_screen.dart';
+import 'package:flutix/pages/wallet/wallet_topup_success_screen.dart';
+import 'package:flutix/services/user_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutix/globals.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class WalletTopup extends StatefulWidget {
   const WalletTopup({Key? key}) : super(key: key);
@@ -20,51 +29,62 @@ class WalletTopup extends StatefulWidget {
 class _WalletTopupState extends State<WalletTopup>
     with TickerProviderStateMixin {
   final _scrollController = ScrollController();
-
-  var _selectedIndex = 1;
-  final _headlines = [
-    ["Ready to,", "Load Up?"],
-    ["Pick Your", "Poisons..."],
-    ["All Set,", "Ready to Go?"]
-  ];
+  final TextEditingController amountController = TextEditingController();
   int selectedKotakIndex = -1;
+  static final db = FirebaseFirestore.instance;
 
   @override
   void initState() {
+    _init();
     super.initState();
   }
 
-  void _handleContinueButton() {
-    if (_selectedIndex < 3) {
-      setState(() {
-        _selectedIndex = _selectedIndex + 1;
+  void _handleSubmit() async {
+    try {
+      DocumentReference userRef = db.collection('users').doc(_auth!.id);
+      await db.collection("transactions").add({
+        "amount": amountController.text,
+        "type": "topup",
+        "users": userRef
       });
-    }
-    _scrollController.animateTo(0,
-        duration: const Duration(seconds: 1), curve: Curves.linear);
-  }
+      await db.collection("users").doc(_auth!.id).update({
+        "balance": FieldValue.increment(double.parse(amountController.text))
+      });
+      UserModel user = await UserService.getUser(_auth!.id);
+      String _authData = json.encode(user.toMap());
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('auth', _authData);
 
-  void _handleBackButton() {
-    if (_selectedIndex > 1) {
-      setState(() {
-        _selectedIndex = _selectedIndex - 1;
-      });
-    } else {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const LogInScreen()),
+        MaterialPageRoute(builder: (context) => const WalletTopupSuccess()),
       );
+    } catch (e) {
+      print(e);
     }
   }
 
   List<String> kotakValues = [
-    "IDR 50.000",
-    "IDR 100.000",
-    "IDR 150.000",
-    "IDR 200.000",
-    "IDR 500.000",
-    "IDR 1.000.000",
+    "50000",
+    "100000",
+    "150000",
+    "200000",
+    "500000",
+    "1000000",
   ];
+
+  UserModel? _auth;
+
+  void _init() async {
+    EasyLoading.instance.indicatorType = EasyLoadingIndicatorType.ring;
+    EasyLoading.show(status: 'Loading..', maskType: EasyLoadingMaskType.black);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String encodedAuth = prefs.getString('auth') ?? "{}";
+    setState(() {
+      _auth = UserModel.fromJson(json.decode(encodedAuth));
+    });
+    EasyLoading.dismiss();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,13 +98,9 @@ class _WalletTopupState extends State<WalletTopup>
         titleSpacing: 0.0,
         iconTheme: const IconThemeData(color: constPrimaryColor),
         automaticallyImplyLeading: false,
-        leading: Padding(
-          padding: const EdgeInsets.only(top: 18.0, bottom: 18),
-          child: BackButton(
-            onPressed: () {
-              _handleBackButton();
-            },
-          ),
+        leading: const Padding(
+          padding: EdgeInsets.only(top: 18.0, bottom: 18),
+          child: BackButton(),
         ),
       ),
       body: SingleChildScrollView(
@@ -98,10 +114,10 @@ class _WalletTopupState extends State<WalletTopup>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(_headlines[_selectedIndex - 1][0],
+                  Text("Ready to,",
                       style: constTextStyle.copyWith(
                           color: constPrimaryColor, fontSize: 34)),
-                  Text(_headlines[_selectedIndex - 1][1],
+                  Text("Load Up?",
                       style: constHeadingStyle.copyWith(
                           color: constPrimaryColor,
                           fontSize: 34,
@@ -132,9 +148,10 @@ class _WalletTopupState extends State<WalletTopup>
                   SizedBox(
                     height: 60.0,
                     child: TextFormField(
+                      controller: amountController,
                       decoration: const InputDecoration(
                         fillColor: Colors.white,
-                        labelText: 'Rp. 0',
+                        labelText: 'Rp. ',
                         hintText: 'Insert Amount',
                       ),
                       validator: (value) {
@@ -150,15 +167,15 @@ class _WalletTopupState extends State<WalletTopup>
                       style: constHeadingStyle.copyWith(
                           color: Colors.white, fontSize: 22)),
                   const SizedBox(height: 15),
-
                   GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2, // Sekarang ada 2 kolom dalam grid
                     ),
                     shrinkWrap:
                         true, // Membungkus GridView dalam SingleChildScrollView
                     physics:
-                        NeverScrollableScrollPhysics(), // Untuk mencegah scroll GridView
+                        const NeverScrollableScrollPhysics(), // Untuk mencegah scroll GridView
                     itemCount: kotakValues.length, // Jumlah kotak dalam grid
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
@@ -166,28 +183,31 @@ class _WalletTopupState extends State<WalletTopup>
                           setState(() {
                             selectedKotakIndex =
                                 index; // Menyimpan indeks kotak yang dipilih
+                            amountController.text = kotakValues[index];
                           });
                         },
                         child: Container(
-                          margin: EdgeInsets.all(8),
+                          margin: const EdgeInsets.all(8),
                           width: 50, // Mengatur lebar kotak
                           height: 50, // Mengatur tinggi kotak
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(
-                                12.0), // Menambahkan lengkungan pada sisi kotak
-                            color: selectedKotakIndex == index
-                                ? Colors.white
-                                : Color(0xFF00419d) // Warna kotak tergantung pada pemilihan
-                          ),
+                              borderRadius: BorderRadius.circular(
+                                  12.0), // Menambahkan lengkungan pada sisi kotak
+                              color: selectedKotakIndex == index
+                                  ? Colors.white
+                                  : const Color(
+                                      0xFF00419d) // Warna kotak tergantung pada pemilihan
+                              ),
                           child: Center(
                             child: Text(
-                              kotakValues[index], // Mengambil nilai dari list
+                              "IDR\n ${kotakValues[index]}", // Mengambil nilai dari list
                               style: constNumberTextStyle.copyWith(
-                                color: selectedKotakIndex == index
-                                ? Color(0xFF00419d)
-                                : Color(0xFFF5c76b),
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold)
+                                  color: selectedKotakIndex == index
+                                      ? const Color(0xFF00419d)
+                                      : const Color(0xFFF5c76b),
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
                             ),
                           ),
                         ),
@@ -198,13 +218,7 @@ class _WalletTopupState extends State<WalletTopup>
                   ButtonIconComponent(
                     buttontext: "Continue",
                     invert: true,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const MainScreen()),
-                      );
-                    },
+                    onPressed: _handleSubmit,
                   ),
                 ],
               ),

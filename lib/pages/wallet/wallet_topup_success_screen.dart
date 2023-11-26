@@ -4,6 +4,7 @@ import 'package:flutix/pages/auth/sign_up/sign_up_genre_screen.dart';
 import 'package:flutix/pages/auth/sign_up/sign_up_info_screen.dart';
 import 'package:flutix/pages/home/home_screen.dart';
 import 'package:flutix/pages/home/main_screen.dart';
+import 'package:flutix/pages/wallet/wallet_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutix/globals.dart';
@@ -133,13 +134,13 @@ class _WalletTopupSuccessState extends State<WalletTopupSuccess>
                   ),
                   const SizedBox(height: 30),
                   ButtonIconComponent(
-                    buttontext: "My Tickets",
+                    buttontext: "History Wallet",
                     invert: true,
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const MainScreen()),
+                            builder: (context) => const WalletScreen()),
                       );
                     },
                   ),

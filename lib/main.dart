@@ -70,7 +70,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
           builder: EasyLoading.init(),
-          home: const OrderConfirmScreen(),
+          home: const SplashScreen(),
           routes: {
             'movie-detail': (context) => MovieDetailScreen(
                 args: ModalRoute.of(context)!.settings.arguments
