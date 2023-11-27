@@ -6,6 +6,8 @@ import 'package:flutix/pages/home/main_screen.dart';
 import 'package:flutix/pages/misc/splash_screen.dart';
 import 'package:flutix/pages/movie/movie_detail_screen.dart';
 import 'package:flutix/pages/order/order_date.dart';
+import 'package:flutix/pages/profile/profile_edit.dart';
+import 'package:flutix/pages/profile/profile_rating.dart';
 import 'package:flutix/pages/order/order_seat.dart';
 import 'package:flutix/pages/profile/profile_screen.dart';
 import 'package:flutix/pages/wallet/wallet_screen.dart';
@@ -68,7 +70,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
           builder: EasyLoading.init(),
-          home: const OrderConfirmScreen(),
+          home: const SplashScreen(),
           routes: {
             'movie-detail': (context) => MovieDetailScreen(
                 args: ModalRoute.of(context)!.settings.arguments

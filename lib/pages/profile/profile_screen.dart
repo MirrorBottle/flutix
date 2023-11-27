@@ -36,7 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircleAvatar(
+            const CircleAvatar(
               radius: 40,
               backgroundColor: constPrimaryColor,
               child: Icon(Icons.person, size: 40, color : Colors.white,),
@@ -60,28 +60,34 @@ class _ProfileScreenState extends State<ProfileScreen>
                 children: [
                   const SizedBox(height: 20,),
                   ListTile(
-                    leading: Icon(Icons.manage_accounts, color: Colors.white, size: 36,),
+                    leading: const Icon(Icons.manage_accounts, color: Colors.white, size: 36,),
                     title: Text("Edit Profile", style: constTextStyle.copyWith(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
                     subtitle: Text("Change your current profile", style: constSecondaryTextStyle.copyWith(color: Colors.white, fontSize: 12,),),
-                    trailing: Icon(Icons.navigate_next, color: Colors.white, size: 28,),
+                    trailing: const Icon(Icons.navigate_next, color: Colors.white, size: 28,),
                   ),
                   ListTile(
-                    leading: Icon(Icons.account_balance_wallet, color: Colors.white, size: 36,),
+                    leading: const Icon(Icons.account_balance_wallet, color: Colors.white, size: 36,),
                     title: Text("My Wallet", style: constTextStyle.copyWith(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
                     subtitle: Text("See your balance", style: constSecondaryTextStyle.copyWith(color: Colors.white, fontSize: 12,),),
-                    trailing: Icon(Icons.navigate_next, color: Colors.white, size: 28,),
+                    trailing: const Icon(Icons.navigate_next, color: Colors.white, size: 28,),
                   ),
                   ListTile(
-                    leading: Icon(Icons.translate, color: Colors.white, size: 36,),
+                    leading: const Icon(Icons.translate, color: Colors.white, size: 36,),
                     title: Text("Change Languange", style: constTextStyle.copyWith(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
                     subtitle: Text("Change current languange", style: constSecondaryTextStyle.copyWith(color: Colors.white, fontSize: 12,),),
-                    trailing: Icon(Icons.navigate_next, color: Colors.white, size: 28,),
+                    trailing: const Icon(Icons.navigate_next, color: Colors.white, size: 28,),
                   ),
                   ListTile(
-                    leading: Icon(Icons.star, color: Colors.white, size: 36,),
+                    leading: const Icon(Icons.help, color: Colors.white, size: 36,),
+                    title: Text("Help", style: constTextStyle.copyWith(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+                    subtitle: Text("Find some help & support", style: constSecondaryTextStyle.copyWith(color: Colors.white, fontSize: 12,),),
+                    trailing: const Icon(Icons.navigate_next, color: Colors.white, size: 28,),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.star, color: Colors.white, size: 36,),
                     title: Text("Rate Our App", style: constTextStyle.copyWith(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
                     subtitle: Text("Give us a rating", style: constSecondaryTextStyle.copyWith(color: Colors.white, fontSize: 12,),),
-                    trailing: Icon(Icons.navigate_next, color: Colors.white, size: 28,),
+                    trailing: const Icon(Icons.navigate_next, color: Colors.white, size: 28,),
                   ),
                   ListTile(
                     leading: Icon(Icons.logout, color: Colors.red[400], size: 36,),

@@ -5,7 +5,8 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 // ignore: must_be_immutable
 class ButtonComponent extends StatelessWidget {
   final String buttontext;
-  final Decoration buttonDecoration;
+  final BoxDecoration buttonDecoration;
+  final bool invert;
   final bool loading;
   // ignore: prefer_typing_uninitialized_variables
   var onPressed;
@@ -14,6 +15,7 @@ class ButtonComponent extends StatelessWidget {
   ButtonComponent(
       {required this.buttontext,
       this.buttonDecoration = constButtonDecoration,
+      this.invert = false,
       this.loading = false,
       required this.onPressed});
 
@@ -25,18 +27,20 @@ class ButtonComponent extends StatelessWidget {
         width: double.infinity,
         height: 70,
         padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-        decoration: buttonDecoration,
+        decoration: buttonDecoration.copyWith(
+          color: invert ? Colors.white : constPrimaryColor
+        ),
         child: Center(
           child: loading
               ? LoadingAnimationWidget.staggeredDotsWave(
-                  color: Colors.white,
+                  color: invert ? constPrimaryColor :Colors.white,
                   size: 35,
                 )
               : Text(
                   buttontext,
                   style: kTextStyle.copyWith(
                       fontSize: 21.0,
-                      color: Colors.white,
+                      color: invert ? constPrimaryColor :Colors.white,
                       fontWeight: FontWeight.bold),
                 ),
         ),

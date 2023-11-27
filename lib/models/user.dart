@@ -8,7 +8,7 @@ class UserModel {
   File? profilePictureFile;
   String? profilePicture;
   String selectedLanguage;
-  int balance;
+  double balance;
   String? password;
   String? balanceFormat;
 
