@@ -82,15 +82,15 @@ List<Widget> buildStarRating(double rating) {
 
   // Add full stars
   starIcons.addAll(List.generate(
-      fullStars, (index) => Icon(Icons.star, color: constTernaryColor)));
+      fullStars, (index) => const Icon(Icons.star, color: constTernaryColor)));
 
   // Add half star if needed
   starIcons.addAll(List.generate(
-      halfStars, (index) => Icon(Icons.star_half, color: constTernaryColor)));
+      halfStars, (index) => const Icon(Icons.star_half, color: constTernaryColor)));
 
   // Add gray stars only if there are positive grayStars
   starIcons.addAll(List.generate(grayStars > 0 ? grayStars : 0,
-      (index) => Icon(Icons.star, color: Colors.grey)));
+      (index) => const Icon(Icons.star, color: Colors.grey)));
 
   // Return a row of star icons
   return starIcons;
@@ -156,11 +156,9 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
         titleSpacing: 0.0,
         iconTheme: const IconThemeData(color: Colors.white),
         automaticallyImplyLeading: false,
-        leading: Padding(
-          padding: const EdgeInsets.only(top: 18.0, bottom: 18),
-          child: BackButton(
-            onPressed: () {},
-          ),
+        leading: const Padding(
+          padding: EdgeInsets.only(top: 18.0, bottom: 18),
+          child: BackButton(),
         ),
       ),
       body: _movie != null
