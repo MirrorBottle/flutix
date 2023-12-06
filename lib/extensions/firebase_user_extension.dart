@@ -8,7 +8,7 @@ extension FirebaseUserExtension on User {
           String email = "No Email",
           List<String> selectedGenres = const [],
           String selectedLanguage = "English",
-          int balance = 50000}) =>
+          double balance = 50000}) =>
       UserModel(
           id: uid,
           email: email,

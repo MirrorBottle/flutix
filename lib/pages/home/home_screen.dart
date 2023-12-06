@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutix/components/image_component.dart';
 import 'package:flutix/models/movie.dart';
 import 'package:flutix/models/user.dart';
+import 'package:flutix/pages/wallet/wallet_screen.dart';
+import 'package:flutix/pages/wallet/wallet_topup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_swiper_plus/flutter_swiper_plus.dart';
@@ -401,6 +403,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               GestureDetector(
+                                onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const WalletTopup()),
+                                          );
+                                        },
                                 child: Padding(
                                   padding: const EdgeInsets.only(
                                       top: 8, right: 10, left: 5),
@@ -419,17 +429,28 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                             size: 18,
                                           )),
                                       const SizedBox(height: 10),
-                                      Text("Top Up",
-                                          style: constTextStyle.copyWith(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16))
+                                      Text(
+                                        "Top Up",
+                                        style: constTextStyle.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                        
+                                      )
                                     ],
                                   ),
                                 ),
-                                onTap: () {},
                               ),
                               GestureDetector(
+                                onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const WalletScreen()),
+                                          );
+                                        },
                                 child: Padding(
                                   padding:
                                       const EdgeInsets.only(top: 8, left: 10),
@@ -456,7 +477,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                     ],
                                   ),
                                 ),
-                                onTap: () {},
                               ),
                             ],
                           )

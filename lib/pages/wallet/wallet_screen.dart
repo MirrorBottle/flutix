@@ -1,5 +1,6 @@
 import 'package:flutix/components/button_component.dart';
 import 'package:flutix/components/image_component.dart';
+import 'package:flutix/pages/home/home_screen.dart';
 import 'package:flutix/pages/home/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutix/globals.dart';
@@ -12,7 +13,11 @@ class TransactionListTile extends StatelessWidget {
   Map<String, dynamic> transaction;
   TransactionListTile({Key? key, required this.transaction}) : super(key: key);
 
+
+
   @override
+
+  
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Container(
@@ -73,6 +78,8 @@ class TransactionListTile extends StatelessWidget {
 class WalletScreen extends StatefulWidget {
   const WalletScreen({Key? key}) : super(key: key);
 
+
+
   @override
   _WalletScreenState createState() => _WalletScreenState();
 }
@@ -80,9 +87,23 @@ class WalletScreen extends StatefulWidget {
 class _WalletScreenState extends State<WalletScreen>
     with TickerProviderStateMixin {
   final _scrollController = ScrollController();
+  var _selectedIndex = 1;
   @override
   void initState() {
     super.initState();
+  }
+
+void _handleBackButton() {
+    if (_selectedIndex > 1) {
+      setState(() {
+        _selectedIndex = _selectedIndex - 1;
+      });
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
+    }
   }
 
   @override
@@ -119,7 +140,7 @@ class _WalletScreenState extends State<WalletScreen>
           padding: const EdgeInsets.only(top: 18.0, bottom: 18),
           child: BackButton(
             color: constPrimaryColor,
-            onPressed: () {},
+            onPressed: () {_handleBackButton();},
           ),
         ),
       ),
