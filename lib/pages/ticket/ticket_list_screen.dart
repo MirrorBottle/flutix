@@ -6,6 +6,7 @@ import 'package:flutix/components/image_component.dart';
 import 'package:flutix/models/ticket.dart';
 import 'package:flutix/models/user.dart';
 import 'package:flutix/pages/home/main_screen.dart';
+import 'package:flutix/pages/ticket/ticket_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutix/globals.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -22,6 +23,12 @@ class TicketLisTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => TicketDetailScreen(ticket: ticket)),
+        );
+      },
       child: Container(
         margin: EdgeInsets.only(bottom: 25),
         child: Row(

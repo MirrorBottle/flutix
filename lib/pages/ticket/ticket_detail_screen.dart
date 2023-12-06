@@ -1,107 +1,67 @@
+import 'dart:convert';
+
 import 'package:flutix/components/button_component.dart';
+import 'package:flutix/models/ticket.dart';
+import 'package:flutix/models/user.dart';
 import 'package:flutix/pages/auth/sign_up_screen.dart';
 import 'package:flutix/pages/home/home_screen.dart';
 import 'package:flutix/pages/home/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutix/globals.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
+import 'package:nb_utils/nb_utils.dart';
 
-class CastCard extends StatelessWidget {
-  final Map<String, String> data;
-  const CastCard({Key? key, required this.data}) : super(key: key);
+List<Widget> buildStarRating(double rating) {
+  // Ensure the rating is within the valid range (0 to 5)
+  rating = rating / 2;
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        child: Padding(
-          padding: const EdgeInsets.only(right: 15, top: 10),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Material(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
-              clipBehavior: Clip.antiAlias,
-              color: constPrimaryColor,
-              child: GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                child: Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(data["image"]!),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  width: 100,
-                  height: 130,
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              width: 100,
-              child: Text(data["name"]!,
-                  overflow: TextOverflow.fade,
-                  maxLines: 1,
-                  softWrap: false,
-                  style: constSecondaryTextStyle.copyWith(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold)),
-            ),
-            SizedBox(
-              width: 100,
-              child: Text(data["character"]!,
-                  overflow: TextOverflow.fade,
-                  maxLines: 1,
-                  softWrap: false,
-                  style: constSecondaryTextStyle.copyWith(
-                      color: Colors.white, fontSize: 14)),
-            )
-          ]),
-        ));
-  }
+  // Determine the number of full stars, half stars, and gray stars
+  int fullStars = rating.floor();
+  int halfStars = ((rating - fullStars)).round();
+  int grayStars = 5 - fullStars - halfStars;
+
+  // Create a list of star icons
+  List<Widget> starIcons = [];
+
+  // Add full stars
+  starIcons.addAll(List.generate(
+      fullStars, (index) => const Icon(Icons.star, color: constTernaryColor)));
+
+  // Add half star if needed
+  starIcons.addAll(List.generate(
+      halfStars, (index) => const Icon(Icons.star_half, color: constTernaryColor)));
+
+  // Add gray stars only if there are positive grayStars
+  starIcons.addAll(List.generate(grayStars > 0 ? grayStars : 0,
+      (index) => const Icon(Icons.star, color: Colors.grey)));
+
+  // Return a row of star icons
+  return starIcons;
 }
-
 class TicketDetailScreen extends StatefulWidget {
-  const TicketDetailScreen({Key? key}) : super(key: key);
+  Ticket ticket;
+  TicketDetailScreen({Key? key, required this.ticket}) : super(key: key);
 
   @override
   _TicketDetailScreenState createState() => _TicketDetailScreenState();
 }
 
 class _TicketDetailScreenState extends State<TicketDetailScreen> {
+  
+  UserModel? _auth;
   @override
   void initState() {
     super.initState();
+    _init();
   }
 
-  final List<Map<String, String>> _casts = [
-    {
-      "name": "Nat Wolff",
-      "character": "Quentin",
-      "image":
-          "https://www.themoviedb.org/t/p/w138_and_h175_face/g9noCweddwSb3VBSRpX3vo7TbuP.jpg"
-    },
-    {
-      "name": "Cara Delevingne",
-      "character": "Margo",
-      "image":
-          "https://www.themoviedb.org/t/p/w138_and_h175_face/fxpve7evj6H1kl8rTnDqNyIdObI.jpg"
-    },
-    {
-      "name": "Austin Abrams",
-      "character": "Ben",
-      "image":
-          "https://www.themoviedb.org/t/p/w138_and_h175_face/9pSpSAk9NsYC5puqAVsmSK3OSeu.jpg"
-    },
-    {
-      "name": "Halston Sage",
-      "character": "Lacey",
-      "image":
-          "https://www.themoviedb.org/t/p/w138_and_h175_face/lFQog3AzxHXAteUz8n2PIJsLQbe.jpg"
-    }
-  ];
+  void _init() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String encodedAuth = prefs.getString('auth') ?? "{}";
+    setState(() {
+      _auth = UserModel.fromJson(json.decode(encodedAuth));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,9 +78,7 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
         automaticallyImplyLeading: false,
         leading: Padding(
           padding: const EdgeInsets.only(top: 18.0, bottom: 18),
-          child: BackButton(
-            onPressed: () {},
-          ),
+          child: BackButton(),
         ),
       ),
       body: Stack(
@@ -131,10 +89,9 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 height: 300,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage(
-                        "https://www.themoviedb.org/t/p/original/j2LJCbVXPOFr71oHV9izq2OBSyg.jpg"),
+                    image: NetworkImage(widget.ticket.movieBackdrop),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -169,10 +126,9 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
                       clipBehavior: Clip.antiAlias,
                       color: constPrimaryColor,
                       child: Container(
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: NetworkImage(
-                                "https://www.themoviedb.org/t/p/original/lVW67w7eWwmBhbBCc4f983pO8m6.jpg"),
+                            image: NetworkImage(widget.ticket.moviePoster),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -186,48 +142,28 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Paper Towns",
-                              style: constHeadingStyle.copyWith(
-                                  color: Colors.white, fontSize: 28)),
+                          SizedBox(
+                                  width: 200,
+                                  child: Text(widget.ticket.movieTitle,
+                                      style: constHeadingStyle.copyWith(
+                                          color: Colors.white, fontSize: 28)),
+                                ),
                           const SizedBox(height: 10),
-                          Text("Jake Schreir",
+                          Text(widget.ticket.movieLanguage,
                               style: constSecondaryTextStyle.copyWith(
                                   color: Colors.white,
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 5),
-                          Text("07/24/2015 • 1h 49m",
-                              style: constSecondaryTextStyle.copyWith(
-                                  color: Colors.white, fontSize: 15)),
                           const SizedBox(height: 15),
                           Row(
                             children: [
-                              Text("8.3",
+                              Text(widget.ticket.movieVote.toString(),
                                   style: constNumberTextStyle.copyWith(
                                       color: constTernaryColor, fontSize: 20)),
                               const SizedBox(
                                 width: 10,
                               ),
-                              const Icon(
-                                Icons.star,
-                                color: constTernaryColor,
-                              ),
-                              const Icon(
-                                Icons.star,
-                                color: constTernaryColor,
-                              ),
-                              const Icon(
-                                Icons.star,
-                                color: constTernaryColor,
-                              ),
-                              const Icon(
-                                Icons.star,
-                                color: constTernaryColor,
-                              ),
-                              const Icon(
-                                Icons.star,
-                                color: Colors.grey,
-                              )
+                              ...buildStarRating(widget.ticket.movieVote)
                             ],
                           )
                         ],
@@ -270,7 +206,7 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
                               fontSize: 18,
                               fontWeight: FontWeight.bold),
                         ),
-                        trailing: Text("Paris Van Java Mall",
+                        trailing: Text(widget.ticket.cinema,
                             style: constSecondaryTextStyle.copyWith(
                               color: Colors.white,
                               fontSize: 18,
@@ -285,7 +221,7 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
                               fontSize: 18,
                               fontWeight: FontWeight.bold),
                         ),
-                        trailing: Text("Sat 21/04, 12:00",
+                        trailing: Text("${widget.ticket.date}, ${widget.ticket.time}",
                             style: constSecondaryTextStyle.copyWith(
                               color: Colors.white,
                               fontSize: 18,
@@ -300,7 +236,7 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
                               fontSize: 18,
                               fontWeight: FontWeight.bold),
                         ),
-                        trailing: Text("IDR. 50.000",
+                        trailing: Text(NumberFormat.currency(locale: 'id_ID', symbol: 'IDR ').format(widget.ticket.price).replaceAll(RegExp(r'\,00$'), ''),
                             style: constNumberTextStyle.copyWith(
                                 color: constTernaryColor,
                                 fontSize: 18,
@@ -315,7 +251,7 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
                               fontSize: 18,
                               fontWeight: FontWeight.bold),
                         ),
-                        trailing: Text("C1, C2",
+                        trailing: Text(widget.ticket.seats,
                             style: constSecondaryTextStyle.copyWith(
                                 color: constTernaryColor,
                                 fontSize: 18,
@@ -336,7 +272,7 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
                                     fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                "Fahmi Fitnanda",
+                                _auth != null ? _auth!.name : '',
                                 style: constSecondaryTextStyle.copyWith(
                                   color: Colors.white,
                                   fontSize: 18,
@@ -344,14 +280,14 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
                               ),
                               SizedBox(height: 30),
                               Text(
-                                "Nama",
+                                "Total",
                                 style: constTextStyle.copyWith(
                                     color: Colors.white,
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                "IDR. 100.000",
+                                NumberFormat.currency(locale: 'id_ID', symbol: 'IDR ').format(widget.ticket.total).replaceAll(RegExp(r'\,00$'), ''),
                                 style: constNumberTextStyle.copyWith(
                                   color: constTernaryColor,
                                   fontSize: 24,
