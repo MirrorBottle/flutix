@@ -83,6 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               style: constSecondaryTextStyle.copyWith(
                   color: kGreyTextColor, fontSize: 14),
             ),
+            
             const SizedBox(height: 40),
             Container(
                 constraints: BoxConstraints(
