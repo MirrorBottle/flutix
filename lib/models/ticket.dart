@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutix/models/user.dart';
 
 class Ticket {
@@ -33,4 +34,23 @@ class Ticket {
     required this.movieBackdrop,
     this.user,
   });
+
+  factory Ticket.fromFirestore(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    return Ticket(
+      id: doc.id,
+      date: data['date'],
+      time: data['time'],
+      cinema: data['cinema'],
+      price: data['price'],
+      total: data['total'],
+      seats: data['seats'],
+      moviePoster: data['movie_poster'],
+      movieId: data['movie_id'],
+      movieLanguage: data['movie_language'],
+      movieTitle: data['movie_title'],
+      movieVote: data['movie_vote'],
+      movieBackdrop: data['movie_backdrop'],
+    );
+  }
 }

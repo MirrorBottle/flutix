@@ -1,10 +1,19 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutix/components/button_component.dart';
+import 'package:flutix/models/ticket.dart';
+import 'package:flutix/models/user.dart';
 import 'package:flutix/pages/auth/sign_up_screen.dart';
 import 'package:flutix/pages/home/home_screen.dart';
 import 'package:flutix/pages/home/main_screen.dart';
+import 'package:flutix/pages/order/order_success.dart';
+import 'package:flutix/providers/ticket_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutix/globals.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class CastCard extends StatelessWidget {
   final Map<String, String> data;
@@ -74,11 +83,50 @@ class _OrderConfirmScreenState extends State<OrderConfirmScreen> {
   @override
   void initState() {
     super.initState();
+    _init();
+  }
+
+  static final db = FirebaseFirestore.instance;
+  bool _loading = false;
+  UserModel? _auth;
+
+  void _init() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String encodedAuth = prefs.getString('auth') ?? "{}";
+    setState(() {
+      _auth = UserModel.fromJson(json.decode(encodedAuth));
+    });
+  }
+
+  void _handleCheckout() async {
+    Ticket ticket = Provider.of<TicketProvider>(context, listen: false).ticket;
+    setState(() {
+      _loading = true;
+    });
+    DocumentReference userRef = db.collection('users').doc(_auth!.id);
+    await db.collection("tickets").add({
+      "price": ticket.price,
+      "cinema": ticket.cinema,
+      "seats": ticket.seats,
+      "time": ticket.time,
+      "date": ticket.date,
+      "total": ticket.total,
+      "movie_vote": ticket.movieVote,
+      "movie_title": ticket.movieTitle,
+      "movie_id": ticket.movieId,
+      "movie_language": ticket.movieLanguage,
+      "movie_poster": ticket.moviePoster,
+      "movie_backdrop": ticket.movieBackdrop,
+      "user": userRef
+    }).then((value) => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const OrderSuccess()),
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(builder: (context, ticketData, child) {
+    return Consumer<TicketProvider>(builder: (context, ticketData, child) {
       return Scaffold(
         extendBodyBehindAppBar: true,
         resizeToAvoidBottomInset: false,
@@ -89,13 +137,6 @@ class _OrderConfirmScreenState extends State<OrderConfirmScreen> {
           elevation: 0.0,
           titleSpacing: 0.0,
           iconTheme: const IconThemeData(color: Colors.white),
-          automaticallyImplyLeading: false,
-          leading: Padding(
-            padding: const EdgeInsets.only(top: 18.0, bottom: 18),
-            child: BackButton(
-              onPressed: () {},
-            ),
-          ),
         ),
         body: Stack(
           clipBehavior: Clip.none,
@@ -105,10 +146,9 @@ class _OrderConfirmScreenState extends State<OrderConfirmScreen> {
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: 300,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(
-                          "https://www.themoviedb.org/t/p/original/j2LJCbVXPOFr71oHV9izq2OBSyg.jpg"),
+                      image: NetworkImage(ticketData.ticket.movieBackdrop),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -143,10 +183,10 @@ class _OrderConfirmScreenState extends State<OrderConfirmScreen> {
                         clipBehavior: Clip.antiAlias,
                         color: constPrimaryColor,
                         child: Container(
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: NetworkImage(
-                                  "https://www.themoviedb.org/t/p/original/lVW67w7eWwmBhbBCc4f983pO8m6.jpg"),
+                              image:
+                                  NetworkImage(ticketData.ticket.moviePoster),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -160,17 +200,21 @@ class _OrderConfirmScreenState extends State<OrderConfirmScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Paper Towns",
+                            SizedBox(
+                              width: 200,
+                              child: Text(ticketData.ticket.movieTitle,
                                 style: constHeadingStyle.copyWith(
                                     color: Colors.white, fontSize: 28)),
+                            ),
                             const SizedBox(height: 10),
-                            Text("Bigmall XXI 21",
+                            Text(ticketData.ticket.cinema,
                                 style: constSecondaryTextStyle.copyWith(
                                     color: Colors.white,
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold)),
                             const SizedBox(height: 5),
-                            Text("Sat 22, 12:00",
+                            Text(
+                                "${ticketData.ticket.date} ${ticketData.ticket.time}",
                                 style: constSecondaryTextStyle.copyWith(
                                     color: Colors.white, fontSize: 15)),
                             const SizedBox(height: 15),
@@ -214,7 +258,7 @@ class _OrderConfirmScreenState extends State<OrderConfirmScreen> {
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold),
                           ),
-                          trailing: Text("C1, C2",
+                          trailing: Text(ticketData.ticket.seats,
                               style: constLabelNumberTextStyle.copyWith(
                                   color: constTernaryColor,
                                   fontSize: 18,
@@ -223,13 +267,16 @@ class _OrderConfirmScreenState extends State<OrderConfirmScreen> {
                         ListTile(
                           contentPadding: EdgeInsets.all(0),
                           leading: Text(
-                            "Ticket(s)",
+                            "Ticket Price",
                             style: constTextStyle.copyWith(
                                 color: Colors.white,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold),
                           ),
-                          trailing: Text("Rp. 120.000 x2",
+                          trailing: Text(
+                              NumberFormat.currency(
+                                      locale: 'id_ID', symbol: 'Rp')
+                                  .format(ticketData.ticket.price),
                               style: constNumberTextStyle.copyWith(
                                   color: Colors.white,
                                   fontSize: 18,
@@ -259,28 +306,16 @@ class _OrderConfirmScreenState extends State<OrderConfirmScreen> {
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold),
                           ),
-                          trailing: Text("Rp. 260.000",
+                          trailing: Text(
+                              NumberFormat.currency(
+                                      locale: 'id_ID', symbol: 'Rp')
+                                  .format(ticketData.ticket.total),
                               style: constNumberTextStyle.copyWith(
                                   color: constTernaryColor,
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold)),
                         ),
                         const SizedBox(height: 20),
-                        ListTile(
-                          contentPadding: EdgeInsets.all(0),
-                          leading: Text(
-                            "Saldo Wallet",
-                            style: constTextStyle.copyWith(
-                                color: constSuccessColor,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          trailing: Text("Rp. 160.000",
-                              style: constNumberTextStyle.copyWith(
-                                  color: constSuccessColor,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold)),
-                        ),
                         const SizedBox(height: 10),
                       ],
                     ),
@@ -291,14 +326,10 @@ class _OrderConfirmScreenState extends State<OrderConfirmScreen> {
               left: 0,
               right: 0,
               child: ButtonIconComponent(
+                loading: _loading,
                 buttontext: "Checkout Now",
                 invert: true,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const MainScreen()),
-                  );
-                },
+                onPressed: _handleCheckout,
               ),
             )
           ],

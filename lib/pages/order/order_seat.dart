@@ -110,7 +110,6 @@ class _OrderSeatScreenState extends State<OrderSeatScreen>
           padding: const EdgeInsets.only(top: 18.0, bottom: 18),
           child: BackButton(
             color: constPrimaryColor,
-            onPressed: () {},
           ),
         ),
       ),

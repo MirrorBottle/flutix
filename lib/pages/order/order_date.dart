@@ -46,6 +46,8 @@ class _OrderDateScreenState extends State<OrderDateScreen>
   @override
   void initState() {
     super.initState();
+    Provider.of<TicketProvider>(context, listen: false).changeDateData(
+        date: DateFormat('dd/MM/yy').format(DateTime(2023, 11, 26)));
   }
 
   @override
